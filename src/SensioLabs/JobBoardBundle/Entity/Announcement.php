@@ -3,10 +3,11 @@
 namespace SensioLabs\JobBoardBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Intl\Intl;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Announcement
+ * Announcement.
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="SensioLabs\JobBoardBundle\Entity\AnnouncementRepository")
@@ -26,7 +27,7 @@ class Announcement
      * @var string
      *
      * @ORM\Column(name="title", type="text")
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Job title should not be empty")
      */
     private $title;
 
@@ -34,7 +35,7 @@ class Announcement
      * @var string
      *
      * @ORM\Column(name="company", type="string", length=255)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Company title should not be empty")
      */
     private $company;
 
@@ -42,7 +43,7 @@ class Announcement
      * @var string
      *
      * @ORM\Column(name="country", type="string", length=2)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Country should not be empty")
      * @Assert\Country
      */
     private $country;
@@ -51,15 +52,15 @@ class Announcement
      * @var string
      *
      * @ORM\Column(name="city", type="string", length=255)
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="City should not be empty")
      */
     private $city;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="contractType", type="smallint")
-     * @Assert\NotBlank()
+     * @ORM\Column(name="contractType", type="string", length=10)
+     * @Assert\NotBlank(message="Contract type should be selected")
      * @Assert\Choice(callback="getContractTypes")
      */
     private $contractType;
@@ -68,7 +69,7 @@ class Announcement
      * @var string
      *
      * @ORM\Column(name="description", type="text")
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="Description should not be empty")
      */
     private $description;
 
@@ -79,24 +80,22 @@ class Announcement
      */
     private $howToApply;
 
-    public static function getContractTypes($onlyKeys = true) {
+    public static function getContractTypes($onlyKeys = true)
+    {
         $types = [
-            'fulltime'=>'Full time',
-            'parttime'=>'Part time',
-            'internship'=>'Internship',
-            'freelance'=>'Freelance',
-            'alternance'=>'Alternance'
+            'FULLTIME' => 'Full time',
+            'PARTTIME' => 'Part time',
+            'INTERNSHIP' => 'Internship',
+            'FREELANCE' => 'Freelance',
+            'ALTERNANCE' => 'Alternance',
         ];
-        if($onlyKeys) {
-            return array_keys($types);
-        } else {
-            return $types;
-        }
+        
+        return $onlyKeys ? array_keys($types) : $types;
     }
     /**
-     * Get id
+     * Get id.
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -104,22 +103,23 @@ class Announcement
     }
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
+     *
      * @return Announcement
      */
     public function setTitle($title)
     {
         $this->title = $title;
-    
+
         return $this;
     }
 
     /**
-     * Get title
+     * Get title.
      *
-     * @return string 
+     * @return string
      */
     public function getTitle()
     {
@@ -127,22 +127,23 @@ class Announcement
     }
 
     /**
-     * Set company
+     * Set company.
      *
      * @param string $company
+     *
      * @return Announcement
      */
     public function setCompany($company)
     {
         $this->company = $company;
-    
+
         return $this;
     }
 
     /**
-     * Get company
+     * Get company.
      *
-     * @return string 
+     * @return string
      */
     public function getCompany()
     {
@@ -150,22 +151,23 @@ class Announcement
     }
 
     /**
-     * Set country
+     * Set country.
      *
      * @param string $country
+     *
      * @return Announcement
      */
     public function setCountry($country)
     {
         $this->country = $country;
-    
+
         return $this;
     }
 
     /**
-     * Get country
+     * Get country.
      *
-     * @return string 
+     * @return string
      */
     public function getCountry()
     {
@@ -173,22 +175,23 @@ class Announcement
     }
 
     /**
-     * Set city
+     * Set city.
      *
      * @param string $city
+     *
      * @return Announcement
      */
     public function setCity($city)
     {
         $this->city = $city;
-    
+
         return $this;
     }
 
     /**
-     * Get city
+     * Get city.
      *
-     * @return string 
+     * @return string
      */
     public function getCity()
     {
@@ -196,22 +199,23 @@ class Announcement
     }
 
     /**
-     * Set contractType
+     * Set contractType.
      *
      * @param integer $contractType
+     *
      * @return Announcement
      */
     public function setContractType($contractType)
     {
         $this->contractType = $contractType;
-    
+
         return $this;
     }
 
     /**
-     * Get contractType
+     * Get contractType.
      *
-     * @return integer 
+     * @return integer
      */
     public function getContractType()
     {
@@ -219,22 +223,23 @@ class Announcement
     }
 
     /**
-     * Set description
+     * Set description.
      *
      * @param string $description
+     *
      * @return Announcement
      */
     public function setDescription($description)
     {
         $this->description = $description;
-    
+
         return $this;
     }
 
     /**
-     * Get description
+     * Get description.
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -242,22 +247,23 @@ class Announcement
     }
 
     /**
-     * Set howToApply
+     * Set howToApply.
      *
      * @param string $howToApply
+     *
      * @return Announcement
      */
     public function setHowToApply($howToApply)
     {
         $this->howToApply = $howToApply;
-    
+
         return $this;
     }
 
     /**
-     * Get howToApply
+     * Get howToApply.
      *
-     * @return string 
+     * @return string
      */
     public function getHowToApply()
     {
