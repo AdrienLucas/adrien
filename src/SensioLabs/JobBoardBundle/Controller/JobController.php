@@ -44,4 +44,13 @@ class JobController extends Controller
     {
         return array();
     }
+
+    /**
+     * @Route("/order", name="job_order")
+     * @Template()
+     */
+    public function orderAction()
+    {
+        return array();
+    }
 }

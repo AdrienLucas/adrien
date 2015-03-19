@@ -56,7 +56,7 @@ class JobControllerTest extends WebTestCase
         $link = $crawler->selectLink('Make changes');
         $this->assertEquals('/update', $link->attr('href'));
         $link = $crawler->selectLink('Publish');
-        $this->assertEquals('/publish/order', $link->attr('href'));
+        $this->assertEquals('/order', $link->attr('href'));
     }
 
     /**
