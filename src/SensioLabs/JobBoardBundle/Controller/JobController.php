@@ -2,6 +2,7 @@
 
 namespace SensioLabs\JobBoardBundle\Controller;
 
+use SensioLabs\JobBoardBundle\Entity\Announcement;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -19,12 +20,20 @@ class JobController extends Controller
     }
 
     /**
-     * @Route("/preview", name="job_preview")
+     * @Route("/{country}/{contractType}/{slug}/preview", name="job_preview")
      * @Template()
      */
     public function previewAction()
     {
-        return array();
+        $announcement = $this->get('session')->get('announcement_preview');
+
+        if (!$announcement instanceof Announcement) {
+            throw $this->createNotFoundException('Announcement not found in session.');
+        }
+
+        return [
+            'announcement' => $announcement,
+        ];
     }
 
     /**

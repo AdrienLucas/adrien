@@ -36,6 +36,7 @@ class BaseControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/post');
         $form = $crawler->selectButton('Preview')->form();
 
+
         $this->client->submit($form, [
             'sensiolabs_jobboardbundle_announcement[title]' => 'New job available!',
             'sensiolabs_jobboardbundle_announcement[company]' => 'SensioLabs',
@@ -45,6 +46,6 @@ class BaseControllerTest extends WebTestCase
             'sensiolabs_jobboardbundle_announcement[description]' => 'Lorem ipsum',
         ]);
 
-        $this->assertTrue($this->client->getResponse()->isRedirect('/preview'));
+        $this->assertTrue($this->client->getResponse()->isRedirect('/FR/FULLTIME/new-job-available/preview'));
     }
 }

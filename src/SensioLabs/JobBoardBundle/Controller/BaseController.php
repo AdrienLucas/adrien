@@ -36,7 +36,13 @@ class BaseController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            return $this->redirect($this->generateUrl('job_preview'));
+            $this->get('session')->set('announcement_preview', $announcement);
+
+            return $this->redirect($this->generateUrl('job_preview', [
+                'country' => $announcement->getCountry(),
+                'contractType' => $announcement->getContractType(),
+                'slug' => $announcement->getSlug(),//,
+            ]));
         }
 
         return [
