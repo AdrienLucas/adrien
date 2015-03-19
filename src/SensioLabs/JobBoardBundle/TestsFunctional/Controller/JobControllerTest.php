@@ -9,12 +9,14 @@ use Symfony\Component\DomCrawler\Crawler;
 
 class JobControllerTest extends WebTestCase
 {
-
     /**
      * @var Client
      */
     protected $client;
 
+    /**
+     * @inheritdoc
+     */
     public function setUp()
     {
         $this->client = static::createClient();
@@ -55,6 +57,14 @@ class JobControllerTest extends WebTestCase
         $this->assertEquals('/update', $link->attr('href'));
         $link = $crawler->selectLink('Publish');
         $this->assertEquals('/publish/order', $link->attr('href'));
+    }
 
+    /**
+     * @inheritdoc
+     */
+    protected function tearDown()
+    {
+        parent::tearDown();
+        $this->client = null;
     }
 }

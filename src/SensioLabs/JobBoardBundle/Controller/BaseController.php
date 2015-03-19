@@ -41,7 +41,7 @@ class BaseController extends Controller
             return $this->redirect($this->generateUrl('job_preview', [
                 'country' => $announcement->getCountry(),
                 'contractType' => $announcement->getContractType(),
-                'slug' => $announcement->getSlug(),//,
+                'slug' => $announcement->getSlug(),
             ]));
         }
 

@@ -6,7 +6,7 @@
 
 <div class="details">
     <span class="filter">
-        <a href="#">{{ announcement.city }}, {{ announcement.countryName }}</a> /
+        <a href="#">{{ announcement.city }}, {{ announcement.country|country_name }}</a> /
         <a href="#">{{ announcement.contractType }}</a>
         {% if announcement.id %}
         <br/><span class="archived">Archived since 12/12/2013</span>

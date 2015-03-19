@@ -20,7 +20,7 @@ class AnnouncementType extends AbstractType
             ->add('company', 'text', ['attr' => ['placeholder' => 'Company']])
             ->add('country')
             ->add('city', 'text', ['attr' => ['placeholder' => 'City']])
-            ->add('contractType', 'choice', ['choices' => Announcement::getContractTypes(false), 'empty_value'=> 'Type of contract'])
+            ->add('contractType', 'choice', ['choices' => Announcement::getContractTypes(false), 'empty_value' => 'Type of contract'])
             ->add('description', 'textarea')
             ->add('howToApply', 'text', ['attr' => ['placeholder' => 'Send your resume at ...']])
         ;

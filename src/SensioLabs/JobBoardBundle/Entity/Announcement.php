@@ -3,7 +3,6 @@
 namespace SensioLabs\JobBoardBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Intl\Intl;
 use Symfony\Component\Validator\Constraints as Assert;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Sluggable\Util as Sluggable;
@@ -99,7 +98,7 @@ class Announcement
             'FREELANCE' => 'Freelance',
             'ALTERNANCE' => 'Alternance',
         ];
-        
+
         return $onlyKeys ? array_keys($types) : $types;
     }
     /**
@@ -182,16 +181,6 @@ class Announcement
     public function getCountry()
     {
         return $this->country;
-    }
-
-    /**
-     * Get country name.
-     *
-     * @return string
-     */
-    public function getCountryName()
-    {
-        return Intl::getRegionBundle()->getCountryName($this->country);
     }
 
     /**
@@ -292,7 +281,7 @@ class Announcement
 
     public function getSlug()
     {
-        if(empty($this->slug)) {
+        if (empty($this->slug)) {
             return Sluggable\Urlizer::urlize($this->title);
         } else {
             return $this->slug;

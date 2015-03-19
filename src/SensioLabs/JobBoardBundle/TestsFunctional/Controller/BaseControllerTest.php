@@ -36,7 +36,6 @@ class BaseControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/post');
         $form = $crawler->selectButton('Preview')->form();
 
-
         $this->client->submit($form, [
             'sensiolabs_jobboardbundle_announcement[title]' => 'New job available!',
             'sensiolabs_jobboardbundle_announcement[company]' => 'SensioLabs',
