@@ -37,12 +37,41 @@ class JobController extends Controller
     }
 
     /**
-     * @Route("/update", name="job_update")
+     * @Route("/post", name="job_post")
+     * @Route("/update", name="job_update", defaults={"update" = true})
      * @Template()
      */
-    public function updateAction(Request $request)
+    public function postAction(Request $request, $update = false)
     {
-        return array();
+        if ($update) {
+            $announcement = $this->get('session')->get('announcement_preview');
+
+            if (!$announcement instanceof Announcement) {
+                throw $this->createNotFoundException('Announcement not found in session.');
+            }
+        } else {
+            $announcement = new Announcement();
+        }
+        $form = $this->createForm('sensiolabs_jobboardbundle_announcement', $announcement, [
+            'action' => $this->generateUrl('job_post'),
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $this->get('session')->set('announcement_preview', $announcement);
+
+            return $this->redirect($this->generateUrl('job_preview', [
+                'country' => $announcement->getCountry(),
+                'contractType' => $announcement->getContractType(),
+                'slug' => $announcement->getSlug(),
+            ]));
+        }
+
+        return [
+            'form' => $form->createView(),
+            'updating' => $update,
+            'announcement' => $announcement,
+        ];
     }
 
     /**

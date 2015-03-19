@@ -17,8 +17,14 @@
 {%- endblock form_errors %}
 
 {% block content %}
-    {{ breadcrumb({'Post a job': path('job_post')}) }}
-
+    {% if not updating %}
+        {{ breadcrumb({'Post a job': path('job_post')}) }}
+    {% else %}
+        {{ breadcrumb({
+            'My jobs': path('job_post'),
+            (announcement.title) : path('job_update')
+        }) }}
+    {% endif %}
     <div class="box" style="padding-bottom:15px">
         {{ form_start(form) }}
             <div class="padding">
@@ -71,7 +77,7 @@
             <div class="padding clearfix">
                 <button class="green-button right" type="submit">
                     <span class="sprite-icon-light-arrow-right"></span>
-                    <span>Preview</span>
+                    <span>{{ not updating ? 'Preview' : 'Update' }}</span>
                 </button>
             </div>
         {{ form_end(form) }}

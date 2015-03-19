@@ -3,45 +3,18 @@
 namespace SensioLabs\JobBoardBundle\TestsFunctional\Controller;
 
 use SensioLabs\JobBoardBundle\Entity\Announcement;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\BrowserKit\Client;
+use SensioLabs\JobBoardBundle\Test\JobBoardTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 
-class JobControllerTest extends WebTestCase
+class JobControllerTest extends JobBoardTestCase
 {
-    /**
-     * @var Client
-     */
-    protected $client;
-
-    /**
-     * @inheritdoc
-     */
-    public function setUp()
-    {
-        $this->client = static::createClient();
-        parent::setUp();
-    }
-
     public function testPreviewAction()
     {
-        $announcement = new Announcement();
-        $announcement->setTitle('test')
-            ->setCompany('test')
-            ->setCity('test')
-            ->setCountry('FR')
-            ->setDescription('foobar foobar')
-            ->setContractType('FULLTIME');
-
-        $this->client->getContainer()->get('session')->set('announcement_preview', $announcement);
+        $announcement = $this->injectAnnouncementInSession();
 
         /** @var Crawler $crawler */
         $crawler = $this->client->request(
-            'GET', sprintf('/%s/%s/%s/preview',
-                $announcement->getCountry(),
-                $announcement->getContractType(),
-                $announcement->getSlug()
-            )
+            'GET', $this->constructAnnouncementUrl($announcement).'/preview'
         );
 
         //Verify if content is present on the page
@@ -57,14 +30,5 @@ class JobControllerTest extends WebTestCase
         $this->assertEquals('/update', $link->attr('href'));
         $link = $crawler->selectLink('Publish');
         $this->assertEquals('/order', $link->attr('href'));
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function tearDown()
-    {
-        parent::tearDown();
-        $this->client = null;
     }
 }
