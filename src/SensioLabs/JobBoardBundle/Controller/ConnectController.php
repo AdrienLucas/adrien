@@ -2,6 +2,7 @@
 
 namespace SensioLabs\JobBoardBundle\Controller;
 
+use SensioLabs\Connect\Security\Authentication\Token\ConnectToken;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -23,14 +24,18 @@ class ConnectController extends Controller
      */
     public function customizationAction()
     {
-        return array();
+        $token = $this->get('security.context')->getToken();
+        $user = $token instanceof ConnectToken ? $token->getApiUser() : null;
+
+        return array('user' => $user);
     }
 
     /**
      * @Route("/session/callback", name="session_callback")
      */
-    public function sessionCallbackAction()
+    public function sessionCallbackAction(Request $request)
     {
+        return $this->get('security.authentication.entry_point.sensiolabs_connect')->start($request);
     }
 
     /**

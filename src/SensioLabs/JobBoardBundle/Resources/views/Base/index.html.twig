@@ -23,24 +23,28 @@
 {% endblock %}
 
 {% block content %}
+    <div id="top"></div>
     <div id="left">
+        {% set countryFilter = app.request.query.get('country') %}
+        {% set contractTypeFilter = app.request.query.get('contract-type') %}
         <div class="filter">
             <span class="title"><img class="sprite-icon-location" alt=">" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}"/>Location</span>
             <ul>
-                <li class="active">
-                    <a href="#">All countries</a>
+                <li {{- filtersForm.country.vars.value == '' ? ' class="active"' : '' }}>
+                    <a href="{{ path('homepage', {(filtersForm.contractType.vars.full_name): filtersForm.contractType.vars.value }) }}" data-relative="{{ filtersForm.country.vars.id }}" data-relative-value="">All countries</a>
                 </li>
-                {% set i = 1 %}
-                {% for i in 0..5 %}
-                    <li {% if i > 3 %}style="display:none"{% endif %}>
-                        <a href="#">France (7)</a>
-                    {% set i = i + 1 %}
+                {% for i,country in countries %}
+                    <li {{- filtersForm.country.vars.value == country.name ? ' class="active"' : ( i > 3 ? ' style="display:none"' : '') }}>
+                        <a href="{{ path('homepage', {(filtersForm.country.vars.full_name): country.name, (filtersForm.contractType.vars.full_name): filtersForm.contractType.vars.value}) }}"
+                           data-relative="{{ filtersForm.country.vars.id }}" data-relative-value="{{ country.name }}">
+                            {{ country.name|country_name }}({{ country.numbers }})
+                        </a>
+                    </li>
                 {% endfor %}
 
-                {% set i = 5 %}
-                {% if i > 4 %}
+                {% if countries|length > 4 %}
                     <li>
-                        <a href="#" class="filter-action"><img class="sprite-icon-dark-arrow-up" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" alt="^" /> Less </a>
+                        <a href="#" class="filter-action"><img class="sprite-icon-dark-arrow-up" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" alt="^" /> Less</a>
                     </li>
                 {% endif %}
             </ul>
@@ -48,18 +52,19 @@
         <div class="filter">
             <span class="title"><img class="sprite-icon-paperclip" alt=">" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}"/> Type of contract </span>
             <ul>
-                <li class="active">
-                    <a href="#">All types of contracts</a>
+                <li {{- filtersForm.contractType.vars.value == '' ? ' class="active"' : '' }}>
+                    <a href="{{ path('homepage', {(filtersForm.country.vars.full_name): filtersForm.country.vars.value}) }}" data-relative="{{ filtersForm.contractType.vars.id }}" data-relative-value="">All types of contracts</a>
                 </li>
-                {% set i = 1 %}
-                {% for i in 0..5 %}
-                    <li {% if i > 3 %}style="display:none"{% endif %}>
-                        <a href="#">Internship(4)</a>
+                {% for i,contractType in contractTypes %}
+                    <li {{- filtersForm.contractType.vars.value == contractType.name ? ' class="active"' : ( i > 3 ? ' style="display:none"' : '') }}>
+                        <a href="{{ path('homepage', {(filtersForm.country.vars.full_name): filtersForm.country.vars.value, (filtersForm.contractType.vars.full_name): contractType.name }) }}"
+                           data-relative="{{ filtersForm.contractType.vars.id }}" data-relative-value="{{ contractType.name }}">
+                            {{ contractType.name }}({{ contractType.numbers }})
+                        </a>
                     </li>
                 {% endfor %}
 
-                {% set i = 5 %}
-                {% if i > 4 %}
+                {% if contractTypes|length > 4 %}
                     <li>
                         <a href="#" class="filter-action"><img class="sprite-icon-dark-arrow-up" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" alt="^" /> Less</a>
                     </li>
@@ -80,11 +85,13 @@
     </div>
     <div id="right">
         <div id="job-container">
+
             {% include 'SensioLabsJobBoardBundle:Includes:job_container.html.twig' %}
+
         </div>
         <div
             data-page="1"
-            data-url="#"
+            data-url="{{ path('homepage', {(filtersForm.country.vars.full_name): filtersForm.country.vars.value, (filtersForm.contractType.vars.full_name): filtersForm.contractType.vars.value}) }}"
             data-empty="<center>No more jobs to show.</center>"
             id="loadmoreajaxloader"
             style="display:none;"
@@ -93,11 +100,13 @@
         </div>
     </div>
     <div class="clear"></div>
+    <div><a href="#top">^ Back to top</a></div>
     <script>
         var seeMore = "More";
         var seeLess = "Less";
         var blank = "{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}";
     </script>
+    {{ form(filtersForm) }}
 {% endblock %}
 
 {% block javascript %}
@@ -107,4 +116,15 @@
     %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
+
+    <script>
+        (function($){
+            $('a[data-relative]').click(function(e){
+                e.preventDefault();
+                var $target = $('#'+$(this).data('relative'));
+                $target.val($(this).data('relative-value'));
+                $target.closest('form').submit();
+            });
+        })(jQuery);
+    </script>
 {% endblock %}

@@ -41,7 +41,7 @@
 
                     <div class="title-company">
                         <div class="job-title">
-                            {{ form_widget(form.title) }}
+                            {{ form_widget(form.title, {'attr': {'class': 'title-input'}}) }}
                         </div>
                         <div class="company-label">
                             <label class="label" for="{{ form.company.vars.id }}">@</label>
@@ -55,18 +55,18 @@
                                 {{ form_widget(form.country) }}
                             </div>
                             <div class="city-input">
-                                {{ form_widget(form.city) }}
+                                {{ form_widget(form.city, {'attr': {'class': "location"}}) }}
                             </div>
                         </div>
                         <div>
-                            {{ form_widget(form.contractType) }}
+                            {{ form_widget(form.contractType, {'attr': {'class': "type"}}) }}
                         </div>
                     </div>
                 </div>
 
                 <div>
                     <label for="description">Description</label>
-                    {{ form_widget(form.description) }}
+                    {{ form_widget(form.description, {'attr': {'rows': "10", 'style': 'width:850px'}}) }}
                 </div>
                 <div class="how-to-apply">
                     <h3> How to apply? </h3><br />

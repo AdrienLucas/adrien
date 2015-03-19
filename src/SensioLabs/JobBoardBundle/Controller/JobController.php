@@ -28,6 +28,7 @@ class JobController extends Controller
         $announcement = $this->get('session')->get('announcement_preview');
 
         if (!$announcement instanceof Announcement) {
+            //@todo : 404 template
             throw $this->createNotFoundException('Announcement not found in session.');
         }
 
@@ -80,6 +81,17 @@ class JobController extends Controller
      */
     public function orderAction()
     {
+
+        $announcement = $this->get('session')->get('announcement_preview');
+
+        if (!$announcement instanceof Announcement) {
+            throw $this->createNotFoundException('Announcement not found in session.');
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($announcement);
+        $em->flush();
+
         return array();
     }
 }
