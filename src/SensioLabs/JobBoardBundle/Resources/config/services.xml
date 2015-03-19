@@ -3,5 +3,10 @@
 <container xmlns="http://symfony.com/schema/dic/services"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
-
+    <services>
+        <service id="sensiolabs_jobboardbundle.form.type.announcement"
+                 class="SensioLabs\JobBoardBundle\Form\AnnouncementType">
+            <tag name="form.type" alias="sensiolabs_jobboardbundle_announcement" />
+        </service>
+    </services>
 </container>

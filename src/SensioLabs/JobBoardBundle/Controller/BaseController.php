@@ -2,6 +2,7 @@
 
 namespace SensioLabs\JobBoardBundle\Controller;
 
+use SensioLabs\JobBoardBundle\Entity\Announcement;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -28,7 +29,19 @@ class BaseController extends Controller
      */
     public function postAction(Request $request)
     {
-        return array();
+        $announcement = new Announcement();
+        $form = $this->createForm('sensiolabs_jobboardbundle_announcement', $announcement, [
+            'action' => $this->generateUrl('job_post'),
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            return $this->redirect($this->generateUrl('job_preview'));
+        }
+
+        return [
+            'form' => $form->createView(),
+        ];
     }
 
     /**
