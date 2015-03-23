@@ -23,7 +23,8 @@ class BaseControllerTest extends JobBoardTestCase
     }
 
 
-    public function testIndexActionWithFilters() {
+    public function testIndexActionWithFilters()
+    {
         $crawler = $this->client->request('GET', '/?announcement_filters[country]=ES');
         $this->assertEquals(7, $crawler->filter('#job-container>div')->count());
 

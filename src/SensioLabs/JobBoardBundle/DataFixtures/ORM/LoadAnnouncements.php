@@ -19,6 +19,7 @@ class LoadUserData implements FixtureInterface
 
         $cities = ['Paris', 'Amiens', 'Lille', 'Clichy', 'Marseille', 'Grenoble'];
         $countries = ['FR', 'GB', 'DE'];
+
         $contractTypes = Announcement::getContractTypes(false);
         unset($contractTypes['FULLTIME']);
         $contractTypes = array_keys($contractTypes);
