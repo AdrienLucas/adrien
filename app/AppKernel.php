@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new SensioLabs\Bundle\ConnectBundle\SensioLabsConnectBundle(),
             new SensioLabs\Internal\Bundle\ConnectBundle\SensioLabsInternalConnectBundle(),
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
+            new Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

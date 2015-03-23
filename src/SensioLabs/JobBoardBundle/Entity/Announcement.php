@@ -3,8 +3,9 @@
 namespace SensioLabs\JobBoardBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Intl\Intl;
 use Symfony\Component\Validator\Constraints as Assert;
+use Gedmo\Mapping\Annotation as Gedmo;
+use Gedmo\Sluggable\Util as Sluggable;
 
 /**
  * Announcement.
@@ -30,6 +31,14 @@ class Announcement
      * @Assert\NotBlank(message="Job title should not be empty")
      */
     private $title;
+
+    /**
+     * @var string
+     *
+     * @Gedmo\Slug(fields={"title"})
+     * @ORM\Column(length=128, unique=true)
+     */
+    private $slug;
 
     /**
      * @var string
@@ -89,7 +98,7 @@ class Announcement
             'FREELANCE' => 'Freelance',
             'ALTERNANCE' => 'Alternance',
         ];
-        
+
         return $onlyKeys ? array_keys($types) : $types;
     }
     /**
@@ -268,5 +277,14 @@ class Announcement
     public function getHowToApply()
     {
         return $this->howToApply;
+    }
+
+    public function getSlug()
+    {
+        if (empty($this->slug)) {
+            return Sluggable\Urlizer::urlize($this->title);
+        } else {
+            return $this->slug;
+        }
     }
 }

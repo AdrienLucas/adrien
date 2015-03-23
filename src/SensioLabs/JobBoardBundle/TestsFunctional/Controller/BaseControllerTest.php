@@ -45,6 +45,6 @@ class BaseControllerTest extends WebTestCase
             'sensiolabs_jobboardbundle_announcement[description]' => 'Lorem ipsum',
         ]);
 
-        $this->assertTrue($this->client->getResponse()->isRedirect('/preview'));
+        $this->assertTrue($this->client->getResponse()->isRedirect('/FR/FULLTIME/new-job-available/preview'));
     }
 }
