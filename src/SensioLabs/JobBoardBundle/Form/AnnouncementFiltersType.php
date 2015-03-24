@@ -1,0 +1,46 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: adrienlucas
+ * Date: 23/03/15
+ * Time: 15:58
+ */
+
+namespace SensioLabs\JobBoardBundle\Form;
+
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+
+class AnnouncementFiltersType extends AbstractType{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        //
+        $builder
+            ->add('country', 'hidden')
+            ->add('contractType', 'hidden');
+        parent::buildForm($builder, $options);
+    }
+
+
+    /**
+     * Returns the name of this type.
+     *
+     * @return string The name of this type
+     */
+    public function getName()
+    {
+        return 'announcement_filters';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    {
+        $resolver->setDefaults(array(
+            'csrf_protection'   => false,
+        ));
+    }
+}

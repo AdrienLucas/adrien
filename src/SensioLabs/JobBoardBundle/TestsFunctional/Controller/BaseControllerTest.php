@@ -7,6 +7,35 @@ use SensioLabs\JobBoardBundle\Test\JobBoardTestCase;
 
 class BaseControllerTest extends JobBoardTestCase
 {
+
+    public function testIndexAction() {
+        $crawler = $this->client->request('GET', '/');
+        $this->assertEquals(10, $crawler->filter('#job-container>div')->count());
+
+        $crawler = $this->client->request('GET', '/?page=2', array(), array(), array(
+            'HTTP_X-Requested-With' => 'XMLHttpRequest',
+        ));
+        $this->assertEquals(10, $crawler->filter('body>div')->count());
+
+        $crawler = $this->client->request('GET', '/?page=666', array(), array(), array(
+            'HTTP_X-Requested-With' => 'XMLHttpRequest',
+        ));
+        $this->assertEquals(0, $crawler->count());
+    }
+
+
+    public function testIndexActionWithFilters() {
+        $crawler = $this->client->request('GET', '/?announcement_filters[country]=ES');
+        $this->assertEquals(7, $crawler->filter('#job-container>div')->count());
+
+        $crawler = $this->client->request('GET', '/?announcement_filters[contractType]=FULLTIME');
+        $this->assertEquals(6, $crawler->filter('#job-container>div')->count());
+
+        $crawler = $this->client->request('GET', '/?announcement_filters[country]=ES&announcement_filters[contractType]=FULLTIME');
+        $this->assertEquals(3, $crawler->filter('#job-container>div')->count());
+    }
+
+
     public function testPostAction()
     {
         $crawler = $this->client->request('GET', '/post');

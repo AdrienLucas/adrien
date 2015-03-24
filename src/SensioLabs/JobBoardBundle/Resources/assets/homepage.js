@@ -28,4 +28,11 @@ $(function () {
             });
         }
     });
+
+    $('.filter a[data-relative]').click(function(e){
+        e.preventDefault();
+        var $target = $('#'+$(this).data('relative'));
+        $target.val($(this).data('relative-value'));
+        $target.closest('form').submit();
+    });
 });
