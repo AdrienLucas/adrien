@@ -13,12 +13,15 @@ use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 class JobController extends Controller
 {
     /**
-     * @Route("/show", name="job_show")
+     * @Route("/{country}/{contractType}/{slug}/show", name="job_show")
+     * @ParamConverter("announcement", class="SensioLabsJobBoardBundle:Announcement")
      * @Template()
      */
-    public function showAction()
+    public function showAction(Announcement $announcement)
     {
-        return array();
+        return [
+            'announcement' => $announcement,
+        ];
     }
 
     /**

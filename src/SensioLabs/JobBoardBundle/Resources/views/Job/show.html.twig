@@ -6,9 +6,9 @@
 
 {% block content %}
     {{ breadcrumb({
-        'France':    path('homepage'),
-        'Full Time': path('homepage'),
-        'Developer': null,
+        (announcement.country|country_name):    path('homepage', {'announcement_filters[country]' : announcement.country}),
+        (announcement.contractType): path('homepage', {'announcement_filters[contractType]' : announcement.contractType}),
+        (announcement.title): null,
     }) }}
 
     {% embed 'SensioLabsJobBoardBundle:Includes:job.html.twig' %}{% endembed %}
