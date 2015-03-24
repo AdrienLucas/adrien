@@ -2,23 +2,16 @@
 
 namespace SensioLabs\JobBoardBundle\TestsFunctional\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use SensioLabs\JobBoardBundle\Entity\Announcement;
+use SensioLabs\JobBoardBundle\Test\JobBoardTestCase;
 
-class BaseControllerTest extends WebTestCase
+class BaseControllerTest extends JobBoardTestCase
 {
-    protected $client;
-
-    public function setUp()
-    {
-        $this->client = static::createClient();
-        parent::setUp();
-    }
-
     public function testPostAction()
     {
         $crawler = $this->client->request('GET', '/post');
 
-        $this->assertGreaterThan(0, $crawler->filter('#breadcrumb > li.active:contains("Post a job")')->count());
+        $this->assertEquals(1, $crawler->filter('#breadcrumb > li.active:contains("Post a job")')->count());
     }
 
     public function testPostActionSubmitError()
@@ -46,5 +39,20 @@ class BaseControllerTest extends WebTestCase
         ]);
 
         $this->assertTrue($this->client->getResponse()->isRedirect('/FR/FULLTIME/new-job-available/preview'));
+    }
+
+    public function testUpdateAction()
+    {
+        $announcement = $this->injectAnnouncementInSession();
+
+        $crawler = $this->client->request('GET', '/update');
+
+        $this->assertEquals(1, $crawler->filter('#breadcrumb > li.active:contains("'.$announcement->getTitle().'")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('input[value="'.$announcement->getCity().'"]')->count());
+        $this->assertGreaterThan(0, $crawler->filter('textarea:contains("'.$announcement->getDescription().'")')->count());
+
+        $form = $crawler->selectButton('Update')->form();
+        $this->client->submit($form);
+        $this->assertTrue($this->client->getResponse()->isRedirect($this->constructAnnouncementUrl($announcement).'/preview'));
     }
 }
