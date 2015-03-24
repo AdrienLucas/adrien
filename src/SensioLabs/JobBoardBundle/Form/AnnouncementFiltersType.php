@@ -10,11 +10,9 @@ class AnnouncementFiltersType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        //
         $builder
             ->add('country', 'hidden')
             ->add('contractType', 'hidden');
-        parent::buildForm($builder, $options);
     }
 
     /**
