@@ -26,61 +26,9 @@
         }) }}
     {% endif %}
     <div class="box" style="padding-bottom:15px">
-        {{ form_start(form) }}
-            <div class="padding">
-                <div class="head clearfix">
 
-                    {% if not form.vars.valid %}
-                        <div id="error" class="errors">
-                            <h4> Errors:</h4>
-                            <ul>
-                                {{ form_errors(form) }}
-                            </ul>
-                        </div>
-                    {% endif %}
+        {% include 'SensioLabsJobBoardBundle:Includes:job_form.html.twig' %}
 
-                    <div class="title-company">
-                        <div class="job-title">
-                            {{ form_widget(form.title, {'attr': {'class': 'title-input'}}) }}
-                        </div>
-                        <div class="company-label">
-                            <label class="label" for="{{ form.company.vars.id }}">@</label>
-                            {{ form_widget(form.company) }}
-                        </div>
-                    </div>
-
-                    <div class="country-city-contract">
-                        <div class="country-city clearfix">
-                            <div class="city-input country-select">
-                                {{ form_widget(form.country) }}
-                            </div>
-                            <div class="city-input">
-                                {{ form_widget(form.city, {'attr': {'class': "location"}}) }}
-                            </div>
-                        </div>
-                        <div>
-                            {{ form_widget(form.contractType, {'attr': {'class': "type"}}) }}
-                        </div>
-                    </div>
-                </div>
-
-                <div>
-                    <label for="description">Description</label>
-                    {{ form_widget(form.description, {'attr': {'rows': "10", 'style': 'width:850px'}}) }}
-                </div>
-                <div class="how-to-apply">
-                    <h3> How to apply? </h3><br />
-                    {{ form_widget(form.howToApply) }}
-                </div>
-            </div>
-
-            <div class="padding clearfix">
-                <button class="green-button right" type="submit">
-                    <span class="sprite-icon-light-arrow-right"></span>
-                    <span>{{ not updating ? 'Preview' : 'Update' }}</span>
-                </button>
-            </div>
-        {{ form_end(form) }}
     </div>
 
     <div class="clear"></div>

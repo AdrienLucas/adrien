@@ -1,19 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: adrienlucas
- * Date: 23/03/15
- * Time: 15:58
- */
 
 namespace SensioLabs\JobBoardBundle\Form;
-
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class AnnouncementFiltersType extends AbstractType{
+class AnnouncementFiltersType extends AbstractType
+{
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         //
@@ -22,7 +16,6 @@ class AnnouncementFiltersType extends AbstractType{
             ->add('contractType', 'hidden');
         parent::buildForm($builder, $options);
     }
-
 
     /**
      * Returns the name of this type.

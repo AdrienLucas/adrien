@@ -2,7 +2,6 @@
 
 namespace SensioLabs\JobBoardBundle\Controller;
 
-use Doctrine\Common\Util\Debug;
 use Doctrine\ORM\EntityRepository;
 use SensioLabs\JobBoardBundle\Form\AnnouncementFiltersType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -24,7 +23,7 @@ class BaseController extends Controller
 
         $filtersForm = $this->createForm(new AnnouncementFiltersType(), null, [
             'method' => 'GET',
-            'action' => $this->generateUrl('homepage')
+            'action' => $this->generateUrl('homepage'),
         ]);
         $filtersForm->handleRequest($request);
 
@@ -34,9 +33,9 @@ class BaseController extends Controller
         );
 
         if ($request->isXmlHttpRequest()) {
-            if(sizeof($announcements) > 0) {
+            if (sizeof($announcements) > 0) {
                 return $this->render('SensioLabsJobBoardBundle:Includes:job_container.html.twig', [
-                    'announcements'=>$announcements
+                    'announcements' => $announcements,
                 ]);
             } else {
                 return Response::create('', Response::HTTP_NO_CONTENT);
@@ -45,9 +44,9 @@ class BaseController extends Controller
 
         return [
             'filtersForm' => $filtersForm->createView(),
-            'announcements'=>$announcements,
+            'announcements' => $announcements,
             'countries' => $repo->getCountriesCount(),
-            'contractTypes' => $repo->getContractTypesCount()
+            'contractTypes' => $repo->getContractTypesCount(),
         ];
     }
 

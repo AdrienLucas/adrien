@@ -2,12 +2,12 @@
 
 namespace SensioLabs\JobBoardBundle\TestsFunctional\Controller;
 
-use SensioLabs\JobBoardBundle\Entity\Announcement;
 use SensioLabs\JobBoardBundle\Test\JobBoardTestCase;
 
 class BaseControllerTest extends JobBoardTestCase
 {
-    public function testIndexAction() {
+    public function testIndexAction()
+    {
         $crawler = $this->client->request('GET', '/');
         $this->assertEquals(10, $crawler->filter('#job-container>div')->count());
 
@@ -21,7 +21,6 @@ class BaseControllerTest extends JobBoardTestCase
         ));
         $this->assertEquals(0, $crawler->count());
     }
-
 
     public function testIndexActionWithFilters()
     {
@@ -69,6 +68,9 @@ class BaseControllerTest extends JobBoardTestCase
         $this->assertTrue($this->client->getResponse()->isRedirect('/FR/FULLTIME/new-job-available/preview'));
     }
 
+    /*
+     * @deprecated
+     * @see JobControllerTest::testUpdateAction
     public function testUpdateAction()
     {
         $announcement = $this->injectAnnouncementInSession();
@@ -83,4 +85,5 @@ class BaseControllerTest extends JobBoardTestCase
         $this->client->submit($form);
         $this->assertTrue($this->client->getResponse()->isRedirect($this->constructAnnouncementUrl($announcement).'/preview'));
     }
+    */
 }

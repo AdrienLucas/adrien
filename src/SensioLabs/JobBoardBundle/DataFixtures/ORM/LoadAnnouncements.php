@@ -4,13 +4,13 @@ namespace SensioLabs\JobBoardBundle\DataFixtures\ORM;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
-use  SensioLabs\JobBoardBundle\Entity\Announcement;
+use SensioLabs\JobBoardBundle\Entity\Announcement;
 
-class LoadUserData implements FixtureInterface
+class LoadAnnouncements implements FixtureInterface
 {
     /**
-    * {@inheritDoc}
-    */
+     * {@inheritDoc}
+     */
     public function load(ObjectManager $manager)
     {
         $rand = function ($ext) {
@@ -24,7 +24,7 @@ class LoadUserData implements FixtureInterface
         unset($contractTypes['FULLTIME']);
         $contractTypes = array_keys($contractTypes);
 
-        for($i=0;$i<4;$i++) {
+        for ($i = 0;$i<4;$i++) {
             $announcement = new Announcement();
             $announcement->setTitle('Spanish job announcement #'.$i);
             $announcement->setCity($rand($cities));
@@ -32,11 +32,12 @@ class LoadUserData implements FixtureInterface
             $announcement->setDescription('Lorem ipsum');
             $announcement->setCountry('ES');
             $announcement->setContractType($rand($contractTypes));
+            $announcement->setUser('8332d6be-089e-46ff-9608-981cc0089ba3');
 
             $manager->persist($announcement);
         }
 
-        for($i=0;$i<3;$i++) {
+        for ($i = 0;$i<3;$i++) {
             $announcement = new Announcement();
             $announcement->setTitle('Fulltime job announcement #'.$i);
             $announcement->setCity($rand($cities));
@@ -44,11 +45,12 @@ class LoadUserData implements FixtureInterface
             $announcement->setDescription('Lorem ipsum');
             $announcement->setCountry($rand($countries));
             $announcement->setContractType('FULLTIME');
+            $announcement->setUser('8332d6be-089e-46ff-9608-981cc0089ba3');
 
             $manager->persist($announcement);
         }
 
-        for($i=0;$i<3;$i++) {
+        for ($i = 0;$i<3;$i++) {
             $announcement = new Announcement();
             $announcement->setTitle('Fulltime spanish job announcement #'.$i);
             $announcement->setCity($rand($cities));
@@ -56,11 +58,12 @@ class LoadUserData implements FixtureInterface
             $announcement->setDescription('Lorem ipsum');
             $announcement->setCountry('ES');
             $announcement->setContractType('FULLTIME');
+            $announcement->setUser('8332d6be-089e-46ff-9608-981cc0089ba3');
 
             $manager->persist($announcement);
         }
 
-        for($i=0;$i<100;$i++) {
+        for ($i = 0;$i<100;$i++) {
             $announcement = new Announcement();
             $announcement->setTitle('Job announcement #'.$i);
             $announcement->setCity($rand($cities));
@@ -68,7 +71,7 @@ class LoadUserData implements FixtureInterface
             $announcement->setDescription('Lorem ipsum');
             $announcement->setCountry($rand($countries));
             $announcement->setContractType($rand($contractTypes));
-
+            $announcement->setUser('8332d6be-089e-46ff-9608-981cc0089ba3');
             $manager->persist($announcement);
         }
         $manager->flush();
