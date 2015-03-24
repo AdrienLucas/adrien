@@ -36,7 +36,7 @@ class AnnouncementRepository extends EntityRepository
     public function getCountriesCount(){
         $qb = $this->createQueryBuilder('a');
 
-        $qb->select('a.country as name, COUNT(a.id) as numbers')
+        $qb->select('a.country as name, COUNT(a.id) as nb_entities')
             ->groupBy('a.country');
 
         return $qb->getQuery()->getArrayResult();
@@ -45,7 +45,7 @@ class AnnouncementRepository extends EntityRepository
     public function getContractTypesCount(){
         $qb = $this->createQueryBuilder('a');
 
-        $qb->select('a.contractType as name, COUNT(a.id) as numbers')
+        $qb->select('a.contractType as name, COUNT(a.id) as nb_entities')
             ->groupBy('a.contractType');
 
         return $qb->getQuery()->getArrayResult();
