@@ -27,17 +27,11 @@ class JobController extends Controller
 
     /**
      * @Route("/{country}/{contractType}/{slug}/preview", name="job_preview")
+     * @ParamConverter("announcement", class="SensioLabsJobBoardBundle:Announcement")
      * @Template()
      */
-    public function previewAction()
+    public function previewAction(Announcement $announcement)
     {
-        $announcement = $this->get('session')->get('announcement_preview');
-
-        if (!$announcement instanceof Announcement) {
-            //@todo : 404 template
-            throw $this->createNotFoundException('Announcement not found in session.');
-        }
-
         return [
             'announcement' => $announcement,
         ];
@@ -146,13 +140,48 @@ class JobController extends Controller
         return array();
     }
 
-    protected function getConnectedUser()
+    /**
+     * @Security("has_role('ROLE_CONNECT_USER')")
+     * @Route("/{country}/{contractType}/{slug}/pay", name="job_pay")
+     * @ParamConverter("announcement", class="SensioLabsJobBoardBundle:Announcement")
+     * @Template()
+     */
+    public function payAction(Announcement $announcement)
     {
-        $user = $this->container->get('security.context')->getToken();
-        if ($user instanceof AnonymousToken) {
-            $user = false;
-        } else {
-            $user = $user->getApiUser();
+
+        $this->getConnectedAnnouncementOwner($announcement);
+
+        //$announcement->setUser($user);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($announcement);
+        $em->flush();
+
+        return array();
+    }
+
+    /**
+     * @Security("has_role('ROLE_CONNECT_USER')")
+     * @Route("/{country}/{contractType}/{slug}/delete", name="job_delete")
+     * @ParamConverter("announcement", class="SensioLabsJobBoardBundle:Announcement")
+     * @Template()
+     */
+    public function deleteAction(Announcement $announcement)
+    {
+        $this->getConnectedAnnouncementOwner($announcement);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($announcement);
+        $em->flush();
+
+        return $this->redirect($this->generateUrl('manage'));
+    }
+
+    public function getConnectedAnnouncementOwner(Announcement $announcement)
+    {
+        $user = $this->container->get('security.context')->getToken()->getApiUser();
+        if ($announcement->getUser() != $user->getUuid()) {
+            throw $this->createNotFoundException('Announcement not found.');
         }
 
         return $user;

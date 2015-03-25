@@ -34,21 +34,25 @@ class BaseControllerTest extends JobBoardTestCase
         $this->assertSame(3, $crawler->filter('#job-container>div')->count());
     }
 
-    public function testPostAction()
+    public function testManageAction()
     {
-        $crawler = $this->client->request('GET', '/post');
+        $this->logIn();
+        $crawler = $this->client->request('GET', '/manage');
+        //Verify entities per page
+        $this->assertSame(25, $crawler->filter('table tbody tr')->count());
 
-        $this->assertSame(1, $crawler->filter('#breadcrumb > li.active:contains("Post a job")')->count());
-    }
+        //Verify pages number
+        $this->assertSame(6, $crawler->filter('.smallpagination>a')->count());
 
-    public function testPostActionSubmitError()
-    {
-        $crawler = $this->client->request('GET', '/post');
-        $form = $crawler->selectButton('Preview')->form();
+        //Verify links
+        $this->assertSame(25, $crawler->filter('a[href$="update"]')->count());
+        $this->assertSame(25, $crawler->filter('a[href$="pay"]')->count());
 
-        $crawler = $this->client->submit($form, array());
-
-        $this->assertGreaterThan(0, $crawler->filter('#error > ul > li')->count());
+        //Verify delete
+        $announcement = $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->find(10);
+        $this->client->request('GET', $this->constructAnnouncementUrl($announcement).'/delete');
+        $this->client->followRedirect();
+        $this->assertSame(null, $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->find(10));
     }
 
     public function testPostActionSubmitSuccess()
