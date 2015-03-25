@@ -16,7 +16,7 @@ class JobControllerTest extends JobBoardTestCase
 
         /** @var Crawler $crawler */
         $crawler = $this->client->request(
-            'GET', $this->constructAnnouncementUrl($announcement).'/show'
+            'GET', $this->constructAnnouncementUrl($announcement)
         );
 
         //Verify if content is present on the page

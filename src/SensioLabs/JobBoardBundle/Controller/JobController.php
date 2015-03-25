@@ -9,11 +9,12 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class JobController extends Controller
 {
     /**
-     * @Route("/{country}/{contractType}/{slug}/show", name="job_show")
+     * @Route("/{country}/{contractType}/{slug}", name="job_show")
      * @ParamConverter("announcement", class="SensioLabsJobBoardBundle:Announcement")
      * @Template()
      */
@@ -81,14 +82,16 @@ class JobController extends Controller
     }
 
     /**
+     * @Security("has_role('ROLE_CONNECT_USER')")
      * @Route("/{country}/{contractType}/{slug}/update", name="job_update")
      * @ParamConverter("announcement", class="SensioLabsJobBoardBundle:Announcement")
      * @Template()
      */
     public function updateAction(Request $request, Announcement $announcement)
     {
-        $user = $this->getConnectedUser();
-        if (!$user || $announcement->getUser() != $user->getUuid()) {
+        $user = $this->container->get('security.context')->getToken()->getApiUser();
+
+        if ($announcement->getUser() != $user->getUuid()) {
             throw $this->createNotFoundException('Announcement not found.');
         }
 
@@ -102,19 +105,10 @@ class JobController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            if ($announcement->getValid()) {
-                $message = \Swift_Message::newInstance()
-                    ->setSubject('An announcement has been modified.')
-                    ->setFrom('send@example.com')
-                    ->setTo('recipient@example.com')
-                    ->setBody(sprintf(
-                        'Please review the changes made to <a href="%s">%s</a>.',
-                        $this->generateUrl('backend_edit', ['id' => $announcement->getId()]),
-                        $announcement->getTitle()
-                    ))
-                ;
-                $this->get('mailer')->send($message);
-            }
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($announcement);
+            $em->flush();
 
             return $this->redirect($this->generateUrl('job_preview', [
                 'country' => $announcement->getCountry(),
