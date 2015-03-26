@@ -1,8 +1,8 @@
 services:
-    my.listener:
-        class: SensioLabs\JobBoardBundle\Listener\BackendNotification
+    jobboard.announcementupdate.listener:
+        class: SensioLabs\JobBoardBundle\Listener\AnnouncementUpdateNotificationListener
         tags:
-            - { name: doctrine.event_listener, event: postUpdate }
+            - { name: doctrine.event_listener, event: preUpdate }
         calls:
             - [ setMailer, [ @mailer ] ]
             - [ setRouter, [ @router ] ]

@@ -54,8 +54,18 @@ class BaseController extends Controller
      * @Route("/manage", name="manage")
      * @Template()
      */
-    public function manageAction()
+    public function manageAction(Request $request, $announcementPerPages = 25)
     {
-        return array();
+        $user = $this->container->get('security.context')->getToken()->getApiUser();
+
+        /** @var EntityRepository $repo */
+        $repo = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Announcement');
+        $announcements = $repo->findBy(['user' => $user->getUuid()]);
+
+        $announcements = $this->get('knp_paginator')->paginate($announcements, $request->query->get('page', 1), $announcementPerPages);
+
+        return [
+            'announcements' => $announcements,
+        ];
     }
 }

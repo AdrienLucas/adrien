@@ -24,6 +24,17 @@ class LoadAnnouncements implements FixtureInterface
         unset($contractTypes['FULLTIME']);
         $contractTypes = array_keys($contractTypes);
 
+        $announcement = new Announcement();
+        $announcement->setTitle('toto job announcement');
+        $announcement->setCity($rand($cities));
+        $announcement->setCompany('totoSensioLabs');
+        $announcement->setDescription('totoLorem ipsum');
+        $announcement->setCountry('FR');
+        $announcement->setContractType($rand($contractTypes));
+        $announcement->setUser('8332d6be-089e-46ff-9608-981cc0089ba3');
+        $announcement->setValid(1);
+        $manager->persist($announcement);
+
         for ($i = 0;$i<4;$i++) {
             $announcement = new Announcement();
             $announcement->setTitle('Spanish job announcement #'.$i);

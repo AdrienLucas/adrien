@@ -103,6 +103,45 @@ class Announcement
      */
     private $howToApply;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="timeLeft", type="integer", nullable=true)
+     */
+    private $timeLeft;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="viewsCount", type="integer", nullable=true)
+     */
+    private $viewsCount = 0;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="published", type="boolean", nullable=true)
+     */
+    private $published = false;
+
+    /**
+     * @return boolean
+     */
+    public function isPublished()
+    {
+        return $this->published;
+    }
+
+    /**
+     * @param boolean $published
+     * @return $this
+     */
+    public function setPublished($published)
+    {
+        $this->published = $published;
+        return $this;
+    }
+
     public static function getContractTypes($onlyKeys = true)
     {
         $types = [
@@ -135,7 +174,6 @@ class Announcement
     public function setTitle($title)
     {
         $this->title = $title;
-
         return $this;
     }
 
@@ -317,6 +355,13 @@ class Announcement
         return $this->howToApply;
     }
 
+
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
+        return $this;
+    }
+
     public function getSlug()
     {
         if (empty($this->slug)) {
@@ -352,6 +397,42 @@ class Announcement
     {
         $this->valid = $valid;
 
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTimeLeft()
+    {
+        return $this->timeLeft;
+    }
+
+    /**
+     * @param int $timeLeft
+     * @return $this
+     */
+    public function setTimeLeft($timeLeft)
+    {
+        $this->timeLeft = $timeLeft;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getViewsCount()
+    {
+        return $this->viewsCount;
+    }
+
+    /**
+     * @param int $viewsCount
+     * @return $this
+     */
+    public function setViewsCount($viewsCount)
+    {
+        $this->viewsCount = $viewsCount;
         return $this;
     }
 }
