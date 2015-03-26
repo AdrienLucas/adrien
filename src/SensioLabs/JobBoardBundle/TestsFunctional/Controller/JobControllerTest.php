@@ -9,6 +9,26 @@ use Symfony\Component\HttpFoundation\Response;
 
 class JobControllerTest extends JobBoardTestCase
 {
+
+    public function testShowAction()
+    {
+        $announcement = $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->find(1);
+
+        /** @var Crawler $crawler */
+        $crawler = $this->client->request(
+            'GET', $this->constructAnnouncementUrl($announcement)
+        );
+
+        //Verify if content is present on the page
+        $this->assertSame(1, $crawler->filter('h2:contains("'.$announcement->getTitle().'")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('span:contains("'.$announcement->getCity().'")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('div:contains("'.$announcement->getDescription().'")')->count());
+
+        //Verify breadcrumb links
+        $this->assertSame(1, $crawler->filter('#breadcrumb a[href$="/?announcement_filters%5Bcountry%5D='.$announcement->getCountry().'"]')->count());
+        $this->assertSame(1, $crawler->filter('#breadcrumb a[href$="/?announcement_filters%5BcontractType%5D='.$announcement->getContractType().'"]')->count());
+    }
+
     public function testPreviewAction()
     {
         $announcement = $this->injectAnnouncementInSession();
@@ -19,12 +39,9 @@ class JobControllerTest extends JobBoardTestCase
         );
 
         //Verify if content is present on the page
-        $this->assertSame(1, $crawler->filter('h2:contains("test")')->count());
-        $this->assertSame(2, $crawler->filter('span:contains("test")')->count());
-        $this->assertGreaterThan(0, $crawler->filter('div:contains("foobar foobar")')->count());
-
-        //Verify if country code has been translated to the country name
-        $this->assertGreaterThan(0, $crawler->filter('body:contains("France")')->count());
+        $this->assertSame(1, $crawler->filter('h2:contains("'.$announcement->getTitle().'")')->count());
+        $this->assertSame(2, $crawler->filter('span:contains("'.$announcement->getCompany().'")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('div:contains("'.$announcement->getDescription().'")')->count());
 
         //Verify if links have the right href attribute
         $link = $crawler->selectLink('Make changes');
