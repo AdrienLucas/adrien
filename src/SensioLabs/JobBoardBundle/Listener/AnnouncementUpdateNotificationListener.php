@@ -28,6 +28,7 @@ class AnnouncementUpdateNotificationListener
                 && !$event->hasChangedField('description')
                 && !$event->hasChangedField('contractType')
                 && !$event->hasChangedField('company')
+                && !$event->hasChangedField('howToApply')
             )
         ) {
             return;

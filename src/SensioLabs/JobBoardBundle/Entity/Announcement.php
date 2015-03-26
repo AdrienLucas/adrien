@@ -120,7 +120,7 @@ class Announcement
     /**
      * @var boolean
      *
-     * @ORM\Column(name="published", type="boolean", nullable=true)
+     * @ORM\Column(name="published", type="boolean")
      */
     private $published = false;
 

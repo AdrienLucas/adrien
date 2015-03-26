@@ -61,7 +61,7 @@ class BaseController extends Controller
      */
     public function manageAction(Request $request, $announcementPerPages = 25)
     {
-        $user = $this->container->get('security.context')->getToken()->getApiUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getApiUser();
 
         /** @var EntityRepository $repo */
         $repo = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Announcement');
