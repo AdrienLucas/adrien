@@ -28,8 +28,9 @@ class JobBoardTestCase extends WebTestCase
     public function setUp()
     {
         $this->client = static::createClient();
-        $this->em = static::$kernel->getContainer()->get('doctrine.orm.entity_manager');
-        parent::setUp();
+        $this->em = static::$kernel->getContainer()
+            ->get('doctrine')
+            ->getManager();
     }
 
     /**
@@ -38,6 +39,7 @@ class JobBoardTestCase extends WebTestCase
     protected function tearDown()
     {
         parent::tearDown();
+        $this->em->close();
         $this->client = null;
     }
 

@@ -3,6 +3,8 @@
 namespace SensioLabs\JobBoardBundle\Controller;
 
 use Doctrine\ORM\EntityRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use SensioLabs\JobBoardBundle\Entity\AnnouncementRepository;
 use SensioLabs\JobBoardBundle\Form\AnnouncementFiltersType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -18,7 +20,9 @@ class BaseController extends Controller
      */
     public function indexAction(Request $request)
     {
-        /** @var EntityRepository $repo */
+        $this->get('jobboard.viewscount.listener')->setEnabled();
+
+        /** @var AnnouncementRepository $repo */
         $repo = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Announcement');
 
         $filtersForm = $this->createForm(new AnnouncementFiltersType(), null, [
@@ -52,6 +56,7 @@ class BaseController extends Controller
 
     /**
      * @Route("/manage", name="manage")
+     * @Security("has_role('ROLE_CONNECT_USER')")
      * @Template()
      */
     public function manageAction(Request $request, $announcementPerPages = 25)

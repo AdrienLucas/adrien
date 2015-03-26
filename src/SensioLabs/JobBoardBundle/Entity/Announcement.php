@@ -134,11 +134,13 @@ class Announcement
 
     /**
      * @param boolean $published
+     *
      * @return $this
      */
     public function setPublished($published)
     {
         $this->published = $published;
+
         return $this;
     }
 
@@ -174,6 +176,7 @@ class Announcement
     public function setTitle($title)
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -355,10 +358,10 @@ class Announcement
         return $this->howToApply;
     }
 
-
     public function setSlug($slug)
     {
         $this->slug = $slug;
+
         return $this;
     }
 
@@ -410,11 +413,13 @@ class Announcement
 
     /**
      * @param int $timeLeft
+     *
      * @return $this
      */
     public function setTimeLeft($timeLeft)
     {
         $this->timeLeft = $timeLeft;
+
         return $this;
     }
 
@@ -428,11 +433,13 @@ class Announcement
 
     /**
      * @param int $viewsCount
+     *
      * @return $this
      */
     public function setViewsCount($viewsCount)
     {
         $this->viewsCount = $viewsCount;
+
         return $this;
     }
 }

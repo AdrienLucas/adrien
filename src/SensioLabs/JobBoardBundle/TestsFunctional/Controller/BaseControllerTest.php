@@ -55,20 +55,19 @@ class BaseControllerTest extends JobBoardTestCase
         $this->assertSame(null, $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->find(10));
     }
 
-    public function testPostActionSubmitSuccess()
+    public function testViewsCountIncrement()
     {
-        $crawler = $this->client->request('GET', '/post');
-        $form = $crawler->selectButton('Preview')->form();
+        $announcement = $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->find(1);
+        $origCount = $announcement->getViewsCount();
 
-        $this->client->submit($form, [
-            'sensiolabs_jobboardbundle_announcement[title]' => 'New job available!',
-            'sensiolabs_jobboardbundle_announcement[company]' => 'SensioLabs',
-            'sensiolabs_jobboardbundle_announcement[country]' => 'FR',
-            'sensiolabs_jobboardbundle_announcement[city]' => 'Paris',
-            'sensiolabs_jobboardbundle_announcement[contractType]' => 'FULLTIME',
-            'sensiolabs_jobboardbundle_announcement[description]' => 'Lorem ipsum',
-        ]);
+        $this->client->request('GET', '/');
 
-        $this->assertTrue($this->client->getResponse()->isRedirect('/FR/FULLTIME/new-job-available/preview'));
+        $this->em->refresh($announcement);
+        $this->assertSame($origCount+1, $announcement->getViewsCount());
+
+        $this->client->request('GET', $this->constructAnnouncementUrl($announcement));
+        $announcement = $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->find(1);
+
+        $this->assertSame($origCount+2, $announcement->getViewsCount());
     }
 }

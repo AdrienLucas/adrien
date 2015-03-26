@@ -2,15 +2,12 @@
 
 namespace SensioLabs\JobBoardBundle\TestsFunctional\Controller;
 
-use Doctrine\Common\Util\Debug;
 use SensioLabs\JobBoardBundle\Entity\Announcement;
 use SensioLabs\JobBoardBundle\Test\JobBoardTestCase;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\HttpFoundation\Response;
 
 class JobControllerTest extends JobBoardTestCase
 {
-
     public function testShowAction()
     {
         $announcement = $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->find(1);
@@ -51,7 +48,6 @@ class JobControllerTest extends JobBoardTestCase
         $link = $crawler->selectLink('Publish');
         $this->assertSame('/order', $link->attr('href'));
     }
-
 
     public function testPostAction()
     {
