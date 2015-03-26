@@ -114,15 +114,4 @@
     %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
-
-    <script>
-        (function($){
-            $('a[data-relative]').click(function(e){
-                e.preventDefault();
-                var $target = $('#'+$(this).data('relative'));
-                $target.val($(this).data('relative-value'));
-                $target.closest('form').submit();
-            });
-        })(jQuery);
-    </script>
 {% endblock %}

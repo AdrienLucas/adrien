@@ -2,9 +2,13 @@
 
 namespace SensioLabs\JobBoardBundle\Test;
 
+use Doctrine\ORM\EntityManager;
+use SensioLabs\Connect\Security\Authentication\Token\ConnectToken;
 use SensioLabs\JobBoardBundle\Entity\Announcement;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Client;
+use Symfony\Component\BrowserKit\Cookie;
+use SensioLabs\Internal\Connect\Api\Entity\User;
 
 class JobBoardTestCase extends WebTestCase
 {
@@ -14,11 +18,17 @@ class JobBoardTestCase extends WebTestCase
     protected $client;
 
     /**
+     * @var EntityManager
+     */
+    protected $em;
+
+    /**
      * @inheritdoc
      */
     public function setUp()
     {
         $this->client = static::createClient();
+        $this->em = static::$kernel->getContainer()->get('doctrine.orm.entity_manager');
         parent::setUp();
     }
 
@@ -47,6 +57,22 @@ class JobBoardTestCase extends WebTestCase
         $this->client->getContainer()->get('session')->set('announcement_preview', $announcement);
 
         return $announcement;
+    }
+
+    protected function logIn()
+    {
+        $session = $this->client->getContainer()->get('session');
+
+        $firewall = 'secured_area';
+        $user = new User();
+        $user->set('uuid', '8332d6be-089e-46ff-9608-981cc0089ba3');
+        $token = new ConnectToken('paul', 'xxxx', $user, 'xxxx', null, array('ROLE_USER', 'ROLE_CONNECT_USER'));
+
+        $session->set('_security_'.$firewall, serialize($token));
+        $session->save();
+
+        $cookie = new Cookie($session->getName(), $session->getId());
+        $this->client->getCookieJar()->set($cookie);
     }
 
     /**

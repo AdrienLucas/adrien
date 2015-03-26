@@ -83,6 +83,20 @@ class Announcement
     private $description;
 
     /**
+     * @var string User uuid
+     *
+     * @ORM\Column(name="user", type="text")
+     */
+    private $user;
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="valid", type="boolean")
+     */
+    private $valid = false;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="howToApply", type="text", nullable=true)
@@ -256,6 +270,30 @@ class Announcement
     }
 
     /**
+     * Set user.
+     *
+     * @param string $user
+     *
+     * @return Announcement
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user.
+     *
+     * @return string
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
      * Set howToApply.
      *
      * @param string $howToApply
@@ -286,5 +324,34 @@ class Announcement
         } else {
             return $this->slug;
         }
+    }
+
+    public function getUrlParameters()
+    {
+        return [
+            'country' => $this->getCountry(),
+            'contractType' => $this->getContractType(),
+            'slug' => $this->getSlug(),
+        ];
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getValid()
+    {
+        return $this->valid;
+    }
+
+    /**
+     * @param boolean $valid
+     *
+     * @return $this
+     */
+    public function setValid($valid)
+    {
+        $this->valid = $valid;
+
+        return $this;
     }
 }
