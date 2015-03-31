@@ -16,6 +16,11 @@
             <div class="padding-table">
                 <h2 class="big-title">My jobs</h2>
                 <a href="{{ path('job_post') }}" class="add right"><img class="sprite-button-add-focus-grey-bg" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" alt="+" /> Post a job </a>
+                {% for flashMessage in app.session.flashbag.get('announcements-error') %}
+                    <div class="flash-notice">
+                        {{ flashMessage }}
+                    </div>
+                {% endfor %}
                 <table class="table table-striped">
                     <thead>
                     <tr>
@@ -41,7 +46,7 @@
 
                                 <td class="warn"> {{ announcement.valid ? '' : 'Waiting payment'}} </td>
 
-                                <td> {{ announcement.viewsCount }} </td>
+                                <td> {{ announcement.listViewsCount + announcement.detailViewsCount }} </td>
 
                                 <td class="action">
                                     <a href="{{ path('job_pay', announcement.urlParameters) }}">Pay</a> /

@@ -10,6 +10,9 @@ class JobControllerTest extends JobBoardTestCase
 {
     public function testShowAction()
     {
+        $this->loadFixtures(array(
+            'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadAnnouncements',
+        ));
         $announcement = $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->find(1);
 
         /** @var Crawler $crawler */
@@ -18,7 +21,6 @@ class JobControllerTest extends JobBoardTestCase
         );
 
         //Verify if content is present on the page
-
         $this->assertSame(1, $crawler->filter('h2:contains("'.$announcement->getTitle().'")')->count());
         $this->assertGreaterThan(0, $crawler->filter('span:contains("'.$announcement->getCity().'")')->count());
         $this->assertGreaterThan(0, $crawler->filter('div:contains("'.$announcement->getDescription().'")')->count());
@@ -30,6 +32,9 @@ class JobControllerTest extends JobBoardTestCase
 
     public function testPreviewAction()
     {
+        $this->loadFixtures(array(
+            'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadAnnouncements',
+        ));
         $announcement = $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->find(1);
 
         /** @var Crawler $crawler */
@@ -46,7 +51,7 @@ class JobControllerTest extends JobBoardTestCase
         $link = $crawler->selectLink('Make changes');
         $this->assertSame($this->constructAnnouncementUrl($announcement).'/update', $link->attr('href'));
         $link = $crawler->selectLink('Publish');
-        $this->assertSame('/order', $link->attr('href'));
+        $this->assertSame($this->constructAnnouncementUrl($announcement).'/pay', $link->attr('href'));
     }
 
     public function testPostAction()
@@ -85,6 +90,9 @@ class JobControllerTest extends JobBoardTestCase
 
     public function testUpdateAction()
     {
+        $this->loadFixtures(array(
+            'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadAnnouncements',
+        ));
         $announcement = $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->find(1);
         $target = $this->constructAnnouncementUrl($announcement).'/update';
 

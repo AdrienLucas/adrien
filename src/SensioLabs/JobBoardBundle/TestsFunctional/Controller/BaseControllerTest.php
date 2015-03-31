@@ -8,6 +8,9 @@ class BaseControllerTest extends JobBoardTestCase
 {
     public function testIndexAction()
     {
+        $this->loadFixtures(array(
+            'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadAnnouncements',
+        ));
         $crawler = $this->client->request('GET', '/');
         $this->assertSame(10, $crawler->filter('#job-container>div')->count());
 
@@ -24,6 +27,9 @@ class BaseControllerTest extends JobBoardTestCase
 
     public function testIndexActionWithFilters()
     {
+        $this->loadFixtures(array(
+            'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadAnnouncements',
+        ));
         $crawler = $this->client->request('GET', '/?announcement_filters[country]=ES');
         $this->assertSame(7, $crawler->filter('#job-container>div')->count());
 
@@ -36,6 +42,9 @@ class BaseControllerTest extends JobBoardTestCase
 
     public function testManageAction()
     {
+        $this->loadFixtures(array(
+            'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadAnnouncements',
+        ));
         $this->logIn();
         $crawler = $this->client->request('GET', '/manage');
         //Verify entities per page
@@ -57,6 +66,9 @@ class BaseControllerTest extends JobBoardTestCase
 
     public function testViewsCountIncrement()
     {
+        $this->loadFixtures(array(
+            'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadAnnouncements',
+        ));
         $announcement = $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->find(1);
         $origCount = $announcement->getViewsCount();
 
@@ -69,5 +81,13 @@ class BaseControllerTest extends JobBoardTestCase
         $announcement = $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->find(1);
 
         $this->assertSame($origCount+2, $announcement->getViewsCount());
+    }
+
+    public function testSLNBar()
+    {
+        $this->logIn();
+        $this->client->request('GET', '/manage');
+
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
     }
 }

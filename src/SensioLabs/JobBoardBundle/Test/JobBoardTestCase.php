@@ -5,7 +5,7 @@ namespace SensioLabs\JobBoardBundle\Test;
 use Doctrine\ORM\EntityManager;
 use SensioLabs\Connect\Security\Authentication\Token\ConnectToken;
 use SensioLabs\JobBoardBundle\Entity\Announcement;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
 use SensioLabs\Internal\Connect\Api\Entity\User;
@@ -39,8 +39,10 @@ class JobBoardTestCase extends WebTestCase
     protected function tearDown()
     {
         parent::tearDown();
-        $this->em->close();
         $this->client = null;
+
+        $this->em->close();
+        $this->em = null;
     }
 
     /**

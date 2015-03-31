@@ -11,5 +11,14 @@
         <service id="sensiolabs_jobboardbundle.twig.jobboard_extension" class="SensioLabs\JobBoardBundle\Twig\JobBoardExtension">
             <tag name="twig.extension" />
         </service>
+        <service id="sensiolabs_jobboardbundle.repository.announcement"
+                 class="SensioLabs\JobBoardBundle\Entity\AnnouncementRepository"
+                 factory-service="doctrine.orm.default_entity_manager"
+                 factory-method="getRepository">
+            <argument>SensioLabs\JobBoardBundle\Entity\Announcement</argument>
+            <call method="setPager">
+                <argument type="service" id="knp_paginator" />
+            </call>
+        </service>
     </services>
 </container>

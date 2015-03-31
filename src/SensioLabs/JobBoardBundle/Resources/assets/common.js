@@ -31,4 +31,6 @@ $(document).ready(function(){
 		return false;
 	});
 
+    tinymce.init({selector:'textarea', menubar:false});
+
 });

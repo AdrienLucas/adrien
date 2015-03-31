@@ -2,11 +2,11 @@
 
 namespace SensioLabs\JobBoardBundle\Controller;
 
-use SensioLabs\Connect\Security\Authentication\Token\ConnectToken;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class ConnectController extends Controller
 {
@@ -24,8 +24,8 @@ class ConnectController extends Controller
      */
     public function customizationAction()
     {
-        $token = $this->get('security.context')->getToken();
-        $user = $token instanceof ConnectToken ? $token->getApiUser() : null;
+        $token = $this->get('security.token_storage')->getToken();
+        $user = $token instanceof TokenInterface ? $token->getApiUser() : null;
 
         return array('user' => $user);
     }

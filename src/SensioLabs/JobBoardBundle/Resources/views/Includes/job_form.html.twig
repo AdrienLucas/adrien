@@ -36,9 +36,11 @@
         </div>
     </div>
 
+    {% block admin_extra_fields %}{% endblock %}
+
     <div>
-        <label for="description">Description</label>
-        {{ form_widget(form.description, {'attr': {'rows': "10", 'class': 'span11'}}) }}
+        <label for="description">Description </label>
+        {{ form_widget(form.description, {'attr': {'rows': "10", 'class': 'job_description span11'}}) }}
     </div>
     <div class="how-to-apply">
         <h3> How to apply? </h3><br />
@@ -49,7 +51,15 @@
 <div class="padding clearfix">
     <button class="green-button right" type="submit">
         <span class="sprite-icon-light-arrow-right"></span>
-        <span>{{ submitButtonName is defined ? submitButtonName : (not updating ? 'Preview' : 'Update') }}</span>
+        <span>{% spaceless %}
+        {% if submitButtonName is defined%}
+            {{ submitButtonName }}
+        {% elseif app.request.attributes.get('_route') ends with 'post' %}
+            Preview
+        {% else %}
+            Update
+        {% endif %}
+        {% endspaceless %}</span>
     </button>
 </div>
 {{ form_end(form) }}

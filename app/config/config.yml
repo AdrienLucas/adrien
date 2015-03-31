@@ -54,7 +54,8 @@ doctrine:
         # if using pdo_sqlite as your database driver, add the path in parameters.yml
         # e.g. database_path: %kernel.root_dir%/data/data.db3
         # path:     %database_path%
-
+        types:
+            datetime: SensioLabs\JobBoardBundle\Doctrine\DBAL\Type\UTCDateTimeType
     orm:
         auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
@@ -78,12 +79,13 @@ stof_doctrine_extensions:
     orm:
         default:
             sluggable: true
+            timestampable: true
 
 knp_paginator:
     page_range: 5                      # default page range used in pagination control
     default_options:
         page_name: page                # page query parameter name
-        sort_field_name: sort          # sort field query parameter name
+        sort_field_name: createdAt          # sort field query parameter name
         sort_direction_name: direction # sort direction query parameter name
         distinct: true                 # ensure distinct results, useful when ORM queries are using GROUP BY statements
     template:

@@ -19,7 +19,7 @@ class JobController extends Controller
      */
     public function showAction(Announcement $announcement)
     {
-        $this->get('jobboard.viewscount.listener')->setEnabled();
+        $this->get('jobboard.viewscount.listener')->setEnabled('Detail');
 
         return [
             'announcement' => $announcement,
@@ -49,9 +49,14 @@ class JobController extends Controller
         $form = $this->createForm('sensiolabs_jobboardbundle_announcement', $announcement, [
             'action' => $this->generateUrl('job_post'),
         ]);
+
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($announcement);
+            $em->flush();
+
             return $this->redirect($this->generateUrl('job_preview', [
                 'country' => $announcement->getCountry(),
                 'contractType' => $announcement->getContractType(),
@@ -61,7 +66,6 @@ class JobController extends Controller
 
         return [
             'form' => $form->createView(),
-            'updating' => false,
             'announcement' => $announcement,
         ];
     }
@@ -114,7 +118,7 @@ class JobController extends Controller
      */
     public function orderAction()
     {
-        $user = $this->container->get('security.context')->getToken()->getApiUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getApiUser();
         $announcement = $this->get('session')->get('announcement_preview');
 
         if (!$announcement instanceof Announcement) {
@@ -134,18 +138,10 @@ class JobController extends Controller
      * @Security("has_role('ROLE_CONNECT_USER')")
      * @Route("/{country}/{contractType}/{slug}/pay", name="job_pay")
      * @ParamConverter("announcement", class="SensioLabsJobBoardBundle:Announcement")
-     * @Template()
+     * @Template("SensioLabsJobBoardBundle:Job:order.html.twig")
      */
     public function payAction(Announcement $announcement)
     {
-        $this->getConnectedAnnouncementOwner($announcement);
-
-        //$announcement->setUser($user);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($announcement);
-        $em->flush();
-
         return array();
     }
 

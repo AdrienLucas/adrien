@@ -7,23 +7,24 @@ use SensioLabs\JobBoardBundle\Entity\Announcement;
 
 class ViewsCountListener
 {
-    protected $enabled = false;
+    protected $enabled = '';
 
     public function postLoad(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
-        if (!$this->enabled || !$entity instanceof Announcement) {
+        if (empty($this->enabled) || !$entity instanceof Announcement) {
             return;
         }
-
-        $entity->setViewsCount($entity->getViewsCount()+1);
+        $setter = sprintf('set%sViewsCount', $this->enabled);
+        $getter = sprintf('get%sViewsCount', $this->enabled);
+        $entity->$setter($entity->$getter()+1);
 
         $em = $args->getEntityManager();
         $em->persist($entity);
         $em->flush();
     }
 
-    public function setEnabled($enabled = true)
+    public function setEnabled($enabled = '')
     {
         $this->enabled = $enabled;
     }

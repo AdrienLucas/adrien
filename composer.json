@@ -67,5 +67,8 @@
                 "database_password"               : "DATABASE_PASSWORD"
             }
         }
+    },
+    "require-dev": {
+        "liip/functional-test-bundle": "~1.2"
     }
 }

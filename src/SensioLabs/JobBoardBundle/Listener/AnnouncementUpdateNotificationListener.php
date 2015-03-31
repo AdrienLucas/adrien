@@ -5,13 +5,14 @@ namespace SensioLabs\JobBoardBundle\Listener;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use SensioLabs\JobBoardBundle\Entity\Announcement;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 class AnnouncementUpdateNotificationListener
 {
     protected $router;
     protected $mailer;
 
-    function __construct(\Swift_Mailer $mailer, Router $router)
+    public function __construct(\Swift_Mailer $mailer, RouterInterface $router)
     {
         $this->mailer = $mailer;
         $this->router = $router;
