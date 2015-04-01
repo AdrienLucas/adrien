@@ -3,7 +3,8 @@ services:
         class: SensioLabs\JobBoardBundle\Listener\AnnouncementUpdateNotificationListener
         tags:
             - { name: doctrine.event_listener, event: preUpdate }
-        arguments: [@mailer, @router]
+        arguments: [@service_container]
+
     jobboard.viewscount.listener:
         class: SensioLabs\JobBoardBundle\Listener\ViewsCountListener
         tags:

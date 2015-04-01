@@ -4,46 +4,50 @@ namespace SensioLabs\JobBoardBundle\Listener;
 
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use SensioLabs\JobBoardBundle\Entity\Announcement;
-use Symfony\Component\Routing\Router;
-use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class AnnouncementUpdateNotificationListener
 {
-    protected $router;
-    protected $mailer;
+    protected $container;
 
-    public function __construct(\Swift_Mailer $mailer, RouterInterface $router)
+    public function __construct(ContainerInterface $container)
     {
-        $this->mailer = $mailer;
-        $this->router = $router;
+        $this->container = $container;
     }
 
     public function preUpdate(PreUpdateEventArgs $event)
     {
         $entity = $event->getEntity();
-
-        if (!$entity instanceof Announcement || !$entity->getValid()
-            || (
-                !$event->hasChangedField('title')
-                && !$event->hasChangedField('city')
-                && !$event->hasChangedField('description')
-                && !$event->hasChangedField('contractType')
-                && !$event->hasChangedField('company')
-                && !$event->hasChangedField('howToApply')
-            )
-        ) {
+        if (!$entity instanceof Announcement || !$entity->getValid()) {
             return;
         }
 
-        $message = \Swift_Message::newInstance()
-            ->setSubject('An announcement has been modified.')
-            ->setFrom('send@example.com')
-            ->setTo('recipient@example.com')
-            ->setBody(sprintf(
-                'Please review the changes made to <a href="%s">%s</a>.',
-                $this->router->generate('backend_edit', ['id' => $entity->getId()]),
-                $entity->getTitle()
-            ));
-        $this->mailer->send($message);
+        if ($event->hasChangedField('valid')) {
+            $message = \Swift_Message::newInstance()
+                //@todo : use the translator. inject it?
+                ->setSubject('An announcement has been modified.')
+                ->setFrom('send@example.com')
+                ->setTo('recipient@example.com')
+                ->setBody($this->container->get('templating')->render('SensioLabsJobBoardBundle:Mail:announcementValidateNotification.html.twig', [
+                    'announcement' => $entity,
+                ]));
+            $this->container->get('mailer')->send($message);
+        } elseif (
+            $event->hasChangedField('title')
+            || $event->hasChangedField('city')
+            || $event->hasChangedField('description')
+            || $event->hasChangedField('contractType')
+            || $event->hasChangedField('company')
+            || $event->hasChangedField('howToApply')
+        ) {
+            $message = \Swift_Message::newInstance()
+                ->setSubject('An announcement has been modified.')
+                ->setFrom('send@example.com')
+                ->setTo('recipient@example.com')
+                ->setBody($this->container->get('templating')->render('SensioLabsJobBoardBundle:Mail:announcementUpdateNotification.html.twig', [
+                    'announcement' => $entity,
+                ]));
+            $this->container->get('mailer')->send($message);
+        }
     }
 }

@@ -3,10 +3,10 @@
 namespace SensioLabs\JobBoardBundle\DataFixtures\ORM;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use SensioLabs\JobBoardBundle\Entity\Announcement;
+use SensioLabs\JobBoardBundle\Entity\User;
 use Hautelook\AliceBundle\Alice\DataFixtureLoader;
 
-class LoadAnnouncements extends DataFixtureLoader
+class LoadUsers extends DataFixtureLoader
 {
     /**
      * {@inheritDoc}
@@ -14,7 +14,7 @@ class LoadAnnouncements extends DataFixtureLoader
     protected function getFixtures()
     {
         return  array(
-            __DIR__.'/../Announcements.yml',
+            __DIR__.'/../Users.yml',
         );
     }
 }

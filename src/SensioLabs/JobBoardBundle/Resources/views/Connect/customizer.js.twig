@@ -1,7 +1,8 @@
 $(document).ready(function() {
     {% if app.user is not null %}
         SLNBar.isAuthenticated = true;
-        SLNBar.uuid = "{{ app.user.username }}";
+        {# SLNBar.uuid = "{{ app.user.username }}"; //Why god? Why? #}
+        SLNBar.uuid = "{{ app.user.uuid }}";
         SLNBar.fullName = "{{ app.security.token.apiUser.name }}";
     {% else %}
         SLNBar.isAuthenticated = false;

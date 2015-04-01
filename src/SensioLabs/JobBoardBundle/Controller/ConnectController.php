@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class ConnectController extends Controller
@@ -25,7 +26,8 @@ class ConnectController extends Controller
     public function customizationAction()
     {
         $token = $this->get('security.token_storage')->getToken();
-        $user = $token instanceof TokenInterface ? $token->getApiUser() : null;
+        $user = $token instanceof TokenInterface  && !($token instanceof AnonymousToken) ? $token->getApiUser() : null;
+        //$user = $token instanceof TokenInterface ? $token->getApiUser() : null;
 
         return array('user' => $user);
     }

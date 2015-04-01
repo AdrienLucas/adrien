@@ -5,7 +5,7 @@
 {% block content %}
     <ul id="breadcrumb">
             <li class="active">
-                <a href="#">Published ads</a> |
+                <a href="{{ path('backend_list') }}">Published ads</a> |
             </li>
             <li>
                 <a href="#">Archived ads</a> |
@@ -19,25 +19,31 @@
         {% block box_content %}
             <div class="padding-table">
                 <div id="backend-job-container">
-
+                    <!--
                     <ul class="backend-flashes">
                         <li class="error">Example of an error message</li>
                         <li class="success">Example of an error message</li>
                     </ul>
-
+                    -->
                     <h2 class="big-title">Published ads</h2>
 
                     <table class="table table-striped backend-list">
                         <thead>
                             <tr>
                                 <th>
-                                    <a href="#"> Company </a> ▼
+                                    {{ knp_pagination_sortable(announcements, 'Company', 'a.company') }}
+                                    {% if announcements.isSorted('a.company') %}<span class="sorted sorted-{{ announcements.direction }}"></span>{% endif %}
+                                    <!--<a href="#"> Company </a> ▼-->
                                 </th>
                                 <th>
-                                    <a href="#"> Title </a> ▲
+                                    {{ knp_pagination_sortable(announcements, 'Title', 'a.title') }}
+                                    {% if announcements.isSorted('a.title') %}<span class="sorted sorted-{{ announcements.direction }}"></span>{% endif %}
+                                    <!--<a href="#"> Title </a> ▲-->
                                 </th>
                                 <th>
-                                    <a href="#"> CreatedAt </a>
+                                    {{ knp_pagination_sortable(announcements, 'CreatedAt', 'a.createdAt') }}
+                                    {% if announcements.isSorted('a.createdAt') %}<span class="sorted sorted-{{ announcements.direction }}"></span>{% endif %}
+                                    <!--<a href="#"> CreatedAt </a>-->
                                 </th>
                                 <th>List Displays</th>
                                 <th>View Displays</th>
@@ -46,31 +52,25 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for i in 0..5 %}
+                            {% for announcement in announcements %}
                                 <tr>
-                                    <td> SensioLabs </td>
-                                    <td> Developer </td>
-                                    <td> 03/01/2014 </td>
-                                    <td> 100 </td>
-                                    <td> 60 </td>
-                                    <td> 40 </td>
+                                    <td> {{ announcement.company }} </td>
+                                    <td> {{ announcement.title }} </td>
+                                    <td> {{ announcement.createdAt|date('d/m/Y') }} </td>
+                                    <td> {{ announcement.listViewsCount }} </td>
+                                    <td> {{ announcement.detailViewsCount }} </td>
+                                    <td> 0{#{{ announcement.apiViewsCount }}#} </td>
                                     <td>
-                                        <a href="{{ path('backend_edit') }}"> Edit </a>
-                                        <button> Delete </button>
+                                        <a href="{{ path('backend_edit', {'id': announcement.id}) }}"> Edit </a>
+                                        <a href="{{ path('backend_delete', {'id': announcement.id}) }}"> Delete </a>
+                                        <!--<button> Delete </button>-->
                                     </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
 
-                    <ul class="backend-pager">
-                        <li class="page active">
-                            <a href="#"> 1 </a>
-                        </li>
-                        <li class="page">
-                            <a href="#"> 2 </a>
-                        </li>
-                    </ul>
+                    {{ knp_pagination_render(announcements, 'SensioLabsJobBoardBundle:Backend:sliding_pagination.html.twig') }}
                 </div>
                 <div class="clear"></div>
             </div>

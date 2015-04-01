@@ -1,0 +1,16 @@
+SensioLabs\JobBoardBundle\Entity\User:
+#tags: [ test, dev ] # optional parameter
+#save_in_reverse: false # optional parameter
+#persistence: orm (default)| mongodb # lets you choose if these fixtures should be saved through the orm or through mongodb.
+    adrien:
+        username: adrienlucas
+        uuid: 8332d6be-089e-46ff-9608-981cc0089ba3
+        email: adrien.lucas@sensiolabs.com
+        name: Adrien LUCAS
+        admin: true
+    sarah:
+        username: sarahkhalil
+        uuid: 36221b12-f362-4dca-8724-4da82ef2ba49
+        email: sarah.khalil@sensiolabs.com
+        name: Sarah Khalil
+        admin: false

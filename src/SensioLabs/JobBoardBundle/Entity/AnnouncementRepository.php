@@ -42,9 +42,9 @@ class AnnouncementRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findByUserPaginated($userUuid, $page, $limit = 25)
+    public function findByUserPaginated(User $user, $page, $limit = 25)
     {
-        $announcements = $this->findBy(['user' => $userUuid], ['createdAt' => 'desc']);
+        $announcements = $this->findBy(['user' => $user], ['createdAt' => 'desc']);
 
         return $this->pager->paginate($announcements, $page, $limit);
     }

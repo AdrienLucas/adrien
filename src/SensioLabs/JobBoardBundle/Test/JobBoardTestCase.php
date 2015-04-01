@@ -8,7 +8,8 @@ use SensioLabs\JobBoardBundle\Entity\Announcement;
 use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
-use SensioLabs\Internal\Connect\Api\Entity\User;
+use SensioLabs\Internal\Connect\Api\Entity\User as ApiUser;
+use SensioLabs\JobBoardBundle\Entity\User;
 
 class JobBoardTestCase extends WebTestCase
 {
@@ -63,14 +64,16 @@ class JobBoardTestCase extends WebTestCase
         return $announcement;
     }
 
-    protected function logIn()
+    protected function logIn($asAdmin = false)
     {
         $session = $this->client->getContainer()->get('session');
 
         $firewall = 'secured_area';
-        $user = new User();
-        $user->set('uuid', '8332d6be-089e-46ff-9608-981cc0089ba3');
-        $token = new ConnectToken('paul', 'xxxx', $user, 'xxxx', null, array('ROLE_USER', 'ROLE_CONNECT_USER'));
+        $apiuser = new ApiUser();
+        $apiuser->set('uuid', '8332d6be-089e-46ff-9608-981cc0089ba3');
+        $user = $this->em->getRepository('SensioLabsJobBoardBundle:User')->findOneByUsername($asAdmin ? 'adrienlucas' : 'sarahkhalil');
+
+        $token = new ConnectToken($user, 'xxxx', $apiuser, 'xxxx', null, array($asAdmin ? 'ROLE_ADMIN' : 'ROLE_USER', 'ROLE_CONNECT_USER'));
 
         $session->set('_security_'.$firewall, serialize($token));
         $session->save();

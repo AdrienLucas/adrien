@@ -5327,3 +5327,15 @@ span.non_extensible_button_01 {
 .warn {
     color:orange;
 }
+
+.postajob-box {
+    padding-bottom:15px;
+}
+
+.sorted.sorted-asc::before {
+    content: "▼";
+}
+
+.sorted.sorted-desc::before {
+    content: "▲";
+}

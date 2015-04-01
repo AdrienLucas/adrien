@@ -78,9 +78,9 @@ class JobController extends Controller
      */
     public function updateAction(Request $request, Announcement $announcement)
     {
-        $user = $this->container->get('security.token_storage')->getToken()->getApiUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
-        if ($announcement->getUser() != $user->getUuid()) {
+        if ($announcement->getUser()->getUuid() !== $user->getUuid()) {
             throw $this->createNotFoundException('Announcement not found.');
         }
 
@@ -118,7 +118,7 @@ class JobController extends Controller
      */
     public function orderAction()
     {
-        $user = $this->container->get('security.token_storage')->getToken()->getApiUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $announcement = $this->get('session')->get('announcement_preview');
 
         if (!$announcement instanceof Announcement) {
@@ -145,27 +145,10 @@ class JobController extends Controller
         return array();
     }
 
-    /**
-     * @Security("has_role('ROLE_CONNECT_USER')")
-     * @Route("/{country}/{contractType}/{slug}/delete", name="job_delete")
-     * @ParamConverter("announcement", class="SensioLabsJobBoardBundle:Announcement")
-     * @Template()
-     */
-    public function deleteAction(Announcement $announcement)
-    {
-        $this->getConnectedAnnouncementOwner($announcement);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->remove($announcement);
-        $em->flush();
-
-        return $this->redirect($this->generateUrl('manage'));
-    }
-
     public function getConnectedAnnouncementOwner(Announcement $announcement)
     {
-        $user = $this->container->get('security.token_storage')->getToken()->getApiUser();
-        if ($announcement->getUser() != $user->getUuid()) {
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+        if ($announcement->getUser()->getUuid() !== $user->getUuid()) {
             throw $this->createNotFoundException('Announcement not found.');
         }
 

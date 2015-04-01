@@ -1,0 +1,9 @@
+{% if pageCount > 1 %}
+    <ul class="backend-pager">
+        {% for page in pagesInRange %}
+            <li class="page {{ page == current ? 'active' : ''}}">
+                <a href="{{ path(route, query|merge({(pageParameterName): page})) }}"> {{ page }} </a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endif %}
