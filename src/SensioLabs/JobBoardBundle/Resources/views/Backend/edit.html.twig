@@ -1,26 +1,30 @@
 {% extends "SensioLabsJobBoardBundle:Backend:layout.html.twig" %}
 
 {% from 'SensioLabsJobBoardBundle:Includes:breadcrumb.html.twig' import breadcrumb %}
-
 {% block title 'Backend - Edit' %}
 
 {% block content %}
     {{ breadcrumb({
         'Backend': path('backend_list'),
-        'Make changes on \'Developper\' announcement': null,
+        ('Make changes on \''~announcement.title~'\' announcement'): null,
     }) }}
 
-    {% embed "SensioLabsJobBoardBundle:Includes:job_form.html.twig" %}
-        {% block admin_extra_fields %}
-            <div class="backend-job-dates">
-                Visible from
-                <input id="publishedAt" class="span3 hasDatepicker" type="datetime" value="01/06/2014" name="publishedAt">
-                To
-                <input id="endedAt" class="span3 hasDatepicker" type="datetime" value="01/06/2014" name="endedAt">
-                (format: mm/dd/yyyy)
-            </div>
-        {% endblock %}
-    {% endembed %}
 
+    <div class="box" style="padding-bottom:15px">
+        {% embed "SensioLabsJobBoardBundle:Includes:job_form.html.twig" %}
+            {% block admin_extra_fields %}
+                <div class="backend-job-dates">
+                    Visible from
+                    {{ form_widget(form.publishedAt, {'attr': {'class': 'span3 hasDatepicker'}}) }}
+                    To
+                    {{ form_widget(form.endedAt, {'attr': {'class': 'span3 hasDatepicker'}}) }}
+                    (format: mm/dd/yyyy)
+                </div>
+                <div>
+                    Valide : {{ form_widget(form.valid) }}
+                </div>
+            {% endblock %}
+        {% endembed %}
+    </div>
     <div class="clear"></div>
 {% endblock %}

@@ -2,9 +2,10 @@
 
 namespace SensioLabs\JobBoardBundle\Controller;
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use SensioLabs\JobBoardBundle\Entity\Announcement;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -12,15 +13,12 @@ class BackendController extends Controller
 {
     /**
      * @Route("/backend", name="backend_list")
-     * @Security("has_role('ROLE_CONNECT_USER')")
      * @Template()
      */
-    public function listAction(Request $request, $announcementPerPages = 25)
+    public function listAction(Request $request)
     {
-        $repo = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Announcement');
-        $announcements = $repo->findBy(['published' => false]);
-
-        $announcements = $this->get('knp_paginator')->paginate($announcements, $request->query->get('page', 1), $announcementPerPages);
+        $announcements = $this->get('sensiolabs_jobboardbundle.repository.announcement')
+            ->getPublishedPaginatedResult($request->query->get('page', 1));
 
         return [
             'announcements' => $announcements,
@@ -28,11 +26,28 @@ class BackendController extends Controller
     }
 
     /**
-     * @Route("/backend/edit", name="backend_edit")
+     * @Route("/backend/{id}/edit", name="backend_edit")
+     * @ParamConverter("announcement", class="SensioLabsJobBoardBundle:Announcement")
      * @Template()
      */
-    public function editAction(Request $request)
+    public function editAction(Request $request, Announcement $announcement)
     {
-        return [];
+        $form = $this->createForm('sensiolabs_jobboardbundle_announcementadmin', $announcement, [
+            'action' => $this->generateUrl('backend_edit', ['id' => $announcement->getId()]),
+        ]);
+
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($announcement);
+            $em->flush();
+
+            return $this->redirectToRoute('backend_list');
+        }
+
+        return [
+            'form' => $form->createView(),
+            'announcement' => $announcement,
+        ];
     }
 }

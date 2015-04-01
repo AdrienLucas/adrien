@@ -11,9 +11,10 @@ class JobControllerTest extends JobBoardTestCase
     public function testShowAction()
     {
         $this->loadFixtures(array(
+            'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadUsers',
             'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadAnnouncements',
         ));
-        $announcement = $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->find(1);
+        $announcement = $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->findOneBySlug('sarah-s-valid-announcement');
 
         /** @var Crawler $crawler */
         $crawler = $this->client->request(
@@ -33,9 +34,10 @@ class JobControllerTest extends JobBoardTestCase
     public function testPreviewAction()
     {
         $this->loadFixtures(array(
+            'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadUsers',
             'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadAnnouncements',
         ));
-        $announcement = $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->find(1);
+        $announcement = $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->findOneBySlug('sarah-s-valid-announcement');
 
         /** @var Crawler $crawler */
         $crawler = $this->client->request(
@@ -91,9 +93,10 @@ class JobControllerTest extends JobBoardTestCase
     public function testUpdateAction()
     {
         $this->loadFixtures(array(
+            'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadUsers',
             'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadAnnouncements',
         ));
-        $announcement = $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->find(1);
+        $announcement = $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->findOneBySlug('sarah-s-valid-announcement');
         $target = $this->constructAnnouncementUrl($announcement).'/update';
 
         $this->logIn();

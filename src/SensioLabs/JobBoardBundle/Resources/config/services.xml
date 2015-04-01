@@ -8,6 +8,10 @@
                  class="SensioLabs\JobBoardBundle\Form\AnnouncementType">
             <tag name="form.type" alias="sensiolabs_jobboardbundle_announcement" />
         </service>
+        <service id="sensiolabs_jobboardbundle.form.type.announcementadmin"
+                 class="SensioLabs\JobBoardBundle\Form\AnnouncementAdminType">
+            <tag name="form.type" alias="sensiolabs_jobboardbundle_announcementadmin" />
+        </service>
         <service id="sensiolabs_jobboardbundle.twig.jobboard_extension" class="SensioLabs\JobBoardBundle\Twig\JobBoardExtension">
             <tag name="twig.extension" />
         </service>
@@ -19,6 +23,16 @@
             <call method="setPager">
                 <argument type="service" id="knp_paginator" />
             </call>
+        </service>
+        <service id="sensiolabs_jobboardbundle.repository.user"
+                 class="SensioLabs\JobBoardBundle\Entity\UserRepository"
+                 factory-service="doctrine" factory-method="getRepository">
+            <argument>SensioLabs\JobBoardBundle\Entity\User</argument>
+        </service>
+        <service id="sensiolabs_jobboardbundle.listener.interactive_login"
+                 class="SensioLabs\JobBoardBundle\Listener\SecurityInteractiveLoginListener">
+            <tag name="kernel.event_subscriber" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
         </service>
     </services>
 </container>

@@ -22,6 +22,7 @@ class BaseController extends Controller
      */
     public function indexAction(Request $request)
     {
+        $user = $this->container->get('security.token_storage')->getToken();
         $this->get('jobboard.viewscount.listener')->setEnabled('List');
 
         /** @var AnnouncementRepository $repo */
@@ -63,13 +64,46 @@ class BaseController extends Controller
      */
     public function manageAction(Request $request)
     {
-        $user = $this->container->get('security.token_storage')->getToken()->getApiUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
         /* @var EntityRepository $repo */
         $announcements = $this->get('sensiolabs_jobboardbundle.repository.announcement')
-            ->findByUserPaginated($user->getUuid(), $request->query->get('page', 1));
+            ->findByUserPaginated($user, $request->query->get('page', 1));
 
         return [
             'announcements' => $announcements,
         ];
+    }
+
+    /**
+     * @Security("has_role('ROLE_CONNECT_USER')")
+     * @Route("/{country}/{contractType}/{slug}/delete", name="job_delete")
+     * @Route("/backend/{id}/delete", name="backend_delete")
+     * @ParamConverter("announcement", class="SensioLabsJobBoardBundle:Announcement")
+     */
+    public function deleteAction(Request $request, Announcement $announcement)
+    {
+        if ($announcement->isPublished()) {
+            $msg = sprintf('You cannot delete %s, it must not be published', $announcement->getTitle());
+            $this->get('session')->getFlashBag()->add('members-notice', $msg);
+        } else {
+            if ($request->get('_route') === 'job_delete') {
+                $user = $this->container->get('security.token_storage')->getToken()->getUser();
+                if ($user->getUuid() != $announcement->getUser()->getUuid()) {
+                    return $this->createAccessDeniedException('This is not your own announcement.');
+                }
+            }
+
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($announcement);
+            $em->flush();
+        }
+
+        if ($request->get('_route') == 'backend_delete') {
+            $direction = 'backend_list';
+        } else {
+            $direction = 'manage';
+        }
+
+        return  $this->redirect($this->generateUrl($direction));
     }
 }

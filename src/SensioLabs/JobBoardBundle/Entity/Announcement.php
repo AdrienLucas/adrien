@@ -83,9 +83,9 @@ class Announcement
     private $description;
 
     /**
-     * @var string User uuid
-     *             let it nullable to authorise anonymous users
-     * @ORM\Column(name="user", type="text", nullable=true)
+     * @var User
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="announcements")
+     * @ORM\JoinColumn(nullable=true)
      */
     private $user;
 
@@ -316,11 +316,11 @@ class Announcement
     /**
      * Set user.
      *
-     * @param string $user
+     * @param User $user
      *
      * @return Announcement
      */
-    public function setUser($user)
+    public function setUser(User $user)
     {
         $this->user = $user;
 
@@ -330,7 +330,7 @@ class Announcement
     /**
      * Get user.
      *
-     * @return string
+     * @return User
      */
     public function getUser()
     {
