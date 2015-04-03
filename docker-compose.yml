@@ -1,0 +1,6 @@
+app:
+  build: .docker
+  volumes:
+    - .:/var/www/poledev
+  ports:
+    - 127.0.0.1:80:80
