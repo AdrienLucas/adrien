@@ -1,7 +1,5 @@
 $(function() {
-    $("#job_endedAt").datepicker({'dateFormat' : 'mm/dd/yy'});
-    $("#job_publishedAt").datepicker({'dateFormat' : 'mm/dd/yy'});
-    $('#job_description').markItUp(mySettings);
+    $(".hasDatepicker").datepicker({'dateFormat' : 'mm/dd/yy'});
 
     function split( val ) {
         return val.split( /,\s*/ );

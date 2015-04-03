@@ -15,12 +15,15 @@ class AnnouncementRepository extends EntityRepository
 {
     protected $pager;
 
+    const DEFAUTL_LIMIT=10;
+    const PAGINATION_LIMIT=25;
+
     public function setPager(PaginatorInterface $pager)
     {
         $this->pager = $pager;
     }
 
-    public function filterAll($filters, $page, $limit = 10)
+    public function filterAll($filters, $page, $limit = self::DEFAUTL_LIMIT)
     {
         $qb = $this->createQueryBuilder('a');
 
@@ -34,22 +37,23 @@ class AnnouncementRepository extends EntityRepository
                 ->setParameter('contracttype', $filters['contractType']);
         }
 
-        $qb->setFirstResult($limit*($page-1));
-        $qb->setMaxResults($limit);
-
-        $qb->orderBy('a.createdAt', 'desc');
+        $qb
+            ->setFirstResult($limit*($page-1))
+            ->setMaxResults($limit)
+            ->orderBy('a.createdAt', 'desc')
+        ;
 
         return $qb->getQuery()->getResult();
     }
 
-    public function findByUserPaginated(User $user, $page, $limit = 25)
+    public function findByUserPaginated(User $user, $page, $limit = self::PAGINATION_LIMIT)
     {
         $announcements = $this->findBy(['user' => $user], ['createdAt' => 'desc']);
 
         return $this->pager->paginate($announcements, $page, $limit);
     }
 
-    public function getPublishedPaginatedResult($page, $limit = 25)
+    public function getPublishedPaginatedResult($page, $limit = self::PAGINATION_LIMIT)
     {
         $qb = $this->createQueryBuilder('a');
 
@@ -71,21 +75,17 @@ class AnnouncementRepository extends EntityRepository
 
     public function getCountriesCount()
     {
-        $qb = $this->createQueryBuilder('a');
-
-        $qb->select('a.country as name, COUNT(a.id) as nb_entities')
-            ->groupBy('a.country');
-
-        return $qb->getQuery()->getArrayResult();
+        return $this->createQueryBuilder('a')
+            ->select('a.country as name, COUNT(a.id) as nb_entities')
+            ->groupBy('a.country')
+            ->getQuery()->getArrayResult();
     }
 
     public function getContractTypesCount()
     {
-        $qb = $this->createQueryBuilder('a');
-
-        $qb->select('a.contractType as name, COUNT(a.id) as nb_entities')
-            ->groupBy('a.contractType');
-
-        return $qb->getQuery()->getArrayResult();
+        return $this->createQueryBuilder('a')
+            ->select('a.contractType as name, COUNT(a.id) as nb_entities')
+            ->groupBy('a.contractType')
+            ->getQuery()->getArrayResult();
     }
 }
