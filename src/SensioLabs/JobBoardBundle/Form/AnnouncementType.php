@@ -21,7 +21,8 @@ class AnnouncementType extends AbstractType
             ->add('country')
             ->add('city', 'text', ['attr' => ['placeholder' => 'City']])
             ->add('contractType', 'choice', ['choices' => Announcement::getContractTypes(false), 'empty_value' => 'Type of contract'])
-            ->add('description', 'textarea')
+            //FIXME : the field is actually required, but a tinyMCE make the validation behave strangely
+            ->add('description', 'textarea', ['required' => false])
             ->add('howToApply', 'text', ['attr' => ['placeholder' => 'Send your resume at ...'], 'required' => false])
         ;
     }

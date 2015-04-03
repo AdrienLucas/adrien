@@ -459,7 +459,7 @@ class Announcement
      *
      * @return $this
      */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt(\DateTime $createdAt)
     {
         $this->createdAt = $createdAt;
 
@@ -479,7 +479,7 @@ class Announcement
      *
      * @return $this
      */
-    public function setUpdatedAt($updatedAt)
+    public function setUpdatedAt(\DateTime $updatedAt)
     {
         $this->updatedAt = $updatedAt;
 
@@ -499,7 +499,7 @@ class Announcement
      *
      * @return $this
      */
-    public function setPublishedAt($publishedAt)
+    public function setPublishedAt(\DateTime $publishedAt)
     {
         $this->publishedAt = $publishedAt;
 
@@ -519,7 +519,7 @@ class Announcement
      *
      * @return $this
      */
-    public function setEndedAt($endedAt)
+    public function setEndedAt(\DateTime $endedAt)
     {
         $this->endedAt = $endedAt;
 
@@ -542,7 +542,7 @@ class Announcement
         } else {
             $now = new \DateTime('now');
 
-            return  ($this->publishedAt <= $now &  $this->endedAt >= $now);
+            return  ($this->publishedAt <= $now && $this->endedAt >= $now);
         }
     }
 
@@ -553,8 +553,7 @@ class Announcement
     {
         if (is_null($this->endedAt)) {
             return false;
-        } else {
-            return date_diff($this->endedAt, new \DateTime());
         }
+        return date_diff($this->endedAt, new \DateTime());
     }
 }

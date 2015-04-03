@@ -21,6 +21,12 @@ class UTCDateTimeType extends DateTimeType
         if (is_null(self::$utc)) {
             self::$utc = new \DateTimeZone('UTC');
         }
+
+        //Fixtures loading need this
+        if (!is_a($value, 'DateTime')) {
+            $value = new \DateTime($value);
+        }
+
         $value->setTimeZone(self::$utc);
 
         return $value->format($platform->getDateTimeFormatString());
