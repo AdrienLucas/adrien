@@ -12,6 +12,7 @@ use Gedmo\Sluggable\Util as Sluggable;
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="SensioLabs\JobBoardBundle\Entity\AnnouncementRepository")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt")
  */
 class Announcement
 {
@@ -146,6 +147,13 @@ class Announcement
      * @ORM\Column(type="datetime")
      */
     private $updatedAt;
+
+    /**
+     * @var \DateTime $deletedAt
+     *
+     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
+     */
+    private $deletedAt;
 
     public static function getContractTypes($onlyKeys = true)
     {
@@ -482,6 +490,26 @@ class Announcement
     public function setUpdatedAt(\DateTime $updatedAt)
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
+
+    /**
+     * @param \DateTime $deletedAt
+     *
+     * @return $this
+     */
+    public function setDeletedAt(\DateTime $deletedAt)
+    {
+        $this->deletedAt = $deletedAt;
 
         return $this;
     }
