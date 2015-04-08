@@ -5,7 +5,7 @@
         {% endblock %}
 
         {% block job_description %}
-            <div class="padding description">{{ announcement.description|striptags }}</div>
+            <div class="padding description">{{ announcement.description|striptags|truncate(200, true, '...') }}</div>
         {% endblock %}
 
         {% block job_apply %}

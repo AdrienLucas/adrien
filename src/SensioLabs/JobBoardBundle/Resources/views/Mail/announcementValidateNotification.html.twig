@@ -1,6 +1,5 @@
-<html>
-<body>
+{% extends "SensioLabsJobBoardBundle:Mail:base.html.twig" %}
+
+{% block content %}
 Your announcement <a href="{{ path('job_update', announcement.urlParameters) }}">{{ announcement.title }}</a> has been validated.
-<br/>
-</body>
-</html>
+{% endblock %}

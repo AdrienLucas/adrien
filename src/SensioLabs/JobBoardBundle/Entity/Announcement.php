@@ -389,7 +389,7 @@ class Announcement
     /**
      * @return boolean
      */
-    public function getValid()
+    public function isValid()
     {
         return $this->valid;
     }
@@ -533,7 +533,7 @@ class Announcement
     }
 
     /**
-     * @return \DateTime
+     * @return boolean
      */
     public function isPublished()
     {

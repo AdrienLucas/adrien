@@ -47,9 +47,6 @@ class User implements UserInterface
 
     public function __construct($uuid = null)
     {
-        if (is_object($uuid)) {
-            throw new \Exception('WTF????');
-        }
         $this->uuid = $uuid;
         $this->announcement = new ArrayCollection();
     }

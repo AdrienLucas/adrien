@@ -24,10 +24,9 @@
                 <argument type="service" id="knp_paginator" />
             </call>
         </service>
-        <service id="sensiolabs_jobboardbundle.repository.user"
-                 class="SensioLabs\JobBoardBundle\Entity\UserRepository"
-                 factory-service="doctrine" factory-method="getRepository">
-            <argument>SensioLabs\JobBoardBundle\Entity\User</argument>
+        <service id="sensiolabs_jobboardbundle.provider.user"
+                 class="SensioLabs\JobBoardBundle\Security\UserProvider">
+            <argument type="service" id="service_container" />
         </service>
         <service id="sensiolabs_jobboardbundle.listener.interactive_login"
                  class="SensioLabs\JobBoardBundle\Listener\SecurityInteractiveLoginListener">

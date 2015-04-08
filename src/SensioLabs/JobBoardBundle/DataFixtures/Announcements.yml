@@ -3,7 +3,7 @@ SensioLabs\JobBoardBundle\Entity\Announcement:
         title: Sarah's Valid Announcement
         city: <city()>
         company: <company()>
-        description: <paragraph(3)>
+        description: <paragraph(4)><br /><br /><paragraph(15)><br /> <paragraph(10)><br /><br/><em><paragraph(3)></em><br/><br/><br/><strong>The HR Team</strong>
         country: <countryCode()>
         contractType: <randomElement(['PARTTIME','INTERNSHIP','FREELANCE','ALTERNANCE'])>
         user: @sarah
@@ -12,11 +12,24 @@ SensioLabs\JobBoardBundle\Entity\Announcement:
         updatedAt: <dateTimeBetween('3 weeks ago', '2 week ago')>
         publishedAt: <dateTimeBetween('2 weeks ago', '1 week ago')>
         endedAt: <dateTimeBetween('1 week', '2 weeks')>
+    sarah-notvalid-announcement:
+        title: Sarah's Not Valid Announcement
+        city: <city()>
+        company: <company()>
+        description: <paragraph(4)><br /><br /><paragraph(15)><br /> <paragraph(10)><br /><br/><em><paragraph(3)></em><br/><br/><br/><strong>The HR Team</strong>
+        country: <countryCode()>
+        contractType: <randomElement(['PARTTIME','INTERNSHIP','FREELANCE','ALTERNANCE'])>
+        user: @sarah
+        valid: false
+        createdAt: <dateTimeBetween('3 months ago', '2 months ago')>
+        updatedAt: <dateTimeBetween('3 weeks ago', '2 week ago')>
+        publishedAt: <dateTimeBetween('2 weeks ago', '1 week ago')>
+        endedAt: <dateTimeBetween('1 week', '2 weeks')>
     spanish-fulltime-announcement:
         title: Spanish Fulltime Announcement
         city: <city()>
         company: <company()>
-        description: <paragraph(3)>
+        description: <paragraph(4)><br /><br /><paragraph(15)><br /> <paragraph(10)><br /><br/><em><paragraph(3)></em><br/><br/><br/><strong>The HR Team</strong>
         country: ES
         contractType: FULLTIME
         user: @adrien
@@ -29,7 +42,7 @@ SensioLabs\JobBoardBundle\Entity\Announcement:
         title: Spanish Not-fulltime Announcement
         city: <city()>
         company: <company()>
-        description: <paragraph(3)>
+        description: <paragraph(4)><br /><br /><paragraph(15)><br /> <paragraph(10)><br /><br/><em><paragraph(3)></em><br/><br/><br/><strong>The HR Team</strong>
         country: ES
         contractType: <randomElement(['PARTTIME','INTERNSHIP','FREELANCE','ALTERNANCE'])>
         user: @adrien
@@ -42,7 +55,7 @@ SensioLabs\JobBoardBundle\Entity\Announcement:
         title: Not-spanish Fulltime Announcement
         city: <city()>
         company: <company()>
-        description: <paragraph(3)>
+        description: <paragraph(4)><br /><br /><paragraph(15)><br /> <paragraph(10)><br /><br/><em><paragraph(3)></em><br/><br/><br/><strong>The HR Team</strong>
         country: GB
         contractType: FULLTIME
         user: @adrien
@@ -55,7 +68,7 @@ SensioLabs\JobBoardBundle\Entity\Announcement:
         title: Sarah's Announcement no.<current()>
         city: <city()>
         company: <company()>
-        description: <paragraph(3)>
+        description: <paragraph(4)><br /><br /><paragraph(15)><br /> <paragraph(10)><br /><br/><em><paragraph(3)></em><br/><br/><br/><strong>The HR Team</strong>
         country: <countryCode()>
         contractType: <randomElement(['PARTTIME','INTERNSHIP','FREELANCE','ALTERNANCE'])>
         user: @sarah

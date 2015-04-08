@@ -42,8 +42,10 @@ class JobBoardTestCase extends WebTestCase
         parent::tearDown();
         $this->client = null;
 
-        $this->em->close();
-        $this->em = null;
+        if(!is_null($this->em)) {
+            $this->em->close();
+            $this->em = null;
+        }
     }
 
     /**
