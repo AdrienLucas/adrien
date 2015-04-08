@@ -57,6 +57,10 @@ doctrine:
         types:
             datetime: SensioLabs\JobBoardBundle\Doctrine\DBAL\Type\UTCDateTimeType
     orm:
+        filters:
+            softdeleteable:
+                class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
+                enabled: true
         auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
 
@@ -80,6 +84,7 @@ stof_doctrine_extensions:
         default:
             sluggable: true
             timestampable: true
+            softdeleteable: true
 
 knp_paginator:
     page_range: 5                      # default page range used in pagination control
@@ -90,7 +95,9 @@ knp_paginator:
         distinct: true                 # ensure distinct results, useful when ORM queries are using GROUP BY statements
     template:
         pagination: SensioLabsJobBoardBundle:Includes:sliding_pagination.html.twig     # sliding pagination controls template
-        sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link templateservices:
+        sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
+
+services:
     twig.extension.text:
        class: Twig_Extensions_Extension_Text
        tags:
