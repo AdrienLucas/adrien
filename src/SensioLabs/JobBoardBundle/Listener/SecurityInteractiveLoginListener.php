@@ -26,16 +26,13 @@ class SecurityInteractiveLoginListener implements EventSubscriberInterface
 
     public function onInteractiveLogin(InteractiveLoginEvent $event)
     {
-        //file_put_contents('/tmp/AMOD-LISTENERS.OUT', get_class($event), FILE_APPEND);
         $token = $event->getAuthenticationToken();
 
         if (!$token instanceof ConnectToken) {
-            //file_put_contents('/tmp/AMOD-LISTENERS.OUT', get_class($token), FILE_APPEND);
             return;
         }
 
         $user = $token->getUser();
-        //file_put_contents('/tmp/AMOD-LISTENERS.OUT', var_export($user), FILE_APPEND);
         $user->updateFromConnect($token->getApiUser());
 
         $this->em->persist($user);

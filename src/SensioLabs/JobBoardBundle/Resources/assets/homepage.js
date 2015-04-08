@@ -4,6 +4,7 @@ $(function () {
     var loader = $('div#loadmoreajaxloader');
 
     $(window).scroll(function() {
+        //Asynchron announcements loading
         if ((offset.top-$(window).height() <= $(window).scrollTop()) && load === false) {
             load = true;
             loader.show();
@@ -27,6 +28,20 @@ $(function () {
                 }
             });
         }
+
+        //Back to top button
+        if ($(this).scrollTop() > 220) {
+            $('.back-to-top').fadeIn(500);
+        } else {
+            $('.back-to-top').fadeOut(500);
+        }
+
+    });
+
+    $('.back-to-top').on('click', function(event) {
+        event.preventDefault();
+        $('html,body').animate({scrollTop: 0});
+        event.stopPropagation();
     });
 
     $('.filter a[data-relative]').click(function(e){

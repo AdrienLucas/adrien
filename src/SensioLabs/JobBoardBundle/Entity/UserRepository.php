@@ -3,34 +3,9 @@
 namespace SensioLabs\JobBoardBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
-use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-class UserRepository extends EntityRepository implements UserProviderInterface
+class UserRepository extends EntityRepository
 {
-    public function loadUserByUsername($uuid)
-    {
-        $user = $this->findOneByUuid($uuid);
 
-        if (!$user) {
-            $user = new User((string) $uuid);
-        }
-
-        return $user;
-    }
-
-    public function refreshUser(UserInterface $user)
-    {
-        if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('class %s is not supported', get_class($user)));
-        }
-
-        return $this->loadUserByUsername($user->getUuid());
-    }
-
-    public function supportsClass($class)
-    {
-        return 'SensioLabs\JobBoardBundle\Entity\User' === $class;
-    }
 }

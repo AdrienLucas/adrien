@@ -90,4 +90,8 @@ knp_paginator:
         distinct: true                 # ensure distinct results, useful when ORM queries are using GROUP BY statements
     template:
         pagination: SensioLabsJobBoardBundle:Includes:sliding_pagination.html.twig     # sliding pagination controls template
-        sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link template
+        sortable: KnpPaginatorBundle:Pagination:sortable_link.html.twig # sort link templateservices:
+    twig.extension.text:
+       class: Twig_Extensions_Extension_Text
+       tags:
+           - { name: twig.extension }

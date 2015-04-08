@@ -53,23 +53,26 @@ class AnnouncementRepository extends EntityRepository
         return $this->pager->paginate($announcements, $page, $limit);
     }
 
-    public function getPublishedPaginatedResult($page, $limit = self::PAGINATION_LIMIT)
+    public function getPublishedPaginatedResult($status, $page, $limit = self::PAGINATION_LIMIT)
     {
         $qb = $this->createQueryBuilder('a');
 
-        $qb
-            ->where(
-                $qb->expr()->orX(
-                    $qb->expr()->andX(
-                        $qb->expr()->lte('a.publishedAt', ':now'),
-                        $qb->expr()->gte('a.endedAt', ':now')
-                    ),
-                    $qb->expr()->isNull('a.publishedAt')
-                )
-            )
-            ->setParameter('now', new \DateTime('now'))
-        ;
-
+        switch($status) {
+            case 'published' :
+                $qb
+                    ->where(
+                        $qb->expr()->orX(
+                            $qb->expr()->andX(
+                                $qb->expr()->lte('a.publishedAt', ':now'),
+                                $qb->expr()->gte('a.endedAt', ':now')
+                            ),
+                            $qb->expr()->isNull('a.publishedAt')
+                        )
+                    )
+                    ->setParameter('now', new \DateTime('now'))
+                ;
+                break;
+        }
         return $this->pager->paginate($qb, $page, $limit);
     }
 

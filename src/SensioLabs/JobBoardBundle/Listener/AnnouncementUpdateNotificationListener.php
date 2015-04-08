@@ -18,7 +18,7 @@ class AnnouncementUpdateNotificationListener
     public function preUpdate(PreUpdateEventArgs $event)
     {
         $entity = $event->getEntity();
-        if (!$entity instanceof Announcement || !$entity->getValid()) {
+        if (!$entity instanceof Announcement || !$entity->isValid()) {
             return;
         }
 

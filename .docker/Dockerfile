@@ -4,8 +4,9 @@ CMD sh /tmp/init-container.sh
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update
+#RUN apt-get update && apt-get install -y moo && apt-get clean
 
 ADD init-container.sh /tmp/init-container.sh
 ADD nginx-vhost.conf /etc/nginx/sites-available/app
+
 RUN ln -s /etc/nginx/sites-available/app /etc/nginx/sites-enabled/app

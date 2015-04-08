@@ -7,7 +7,7 @@ security:
 
     providers:
         sensiolabs_connect:
-            id: sensiolabs_jobboardbundle.repository.user
+            id: sensiolabs_jobboardbundle.provider.user
 #
 #    providers:
 #        sensiolabs_connect:

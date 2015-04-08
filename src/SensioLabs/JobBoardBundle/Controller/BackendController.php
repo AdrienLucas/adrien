@@ -18,7 +18,7 @@ class BackendController extends Controller
     public function listAction(Request $request)
     {
         $announcements = $this->get('sensiolabs_jobboardbundle.repository.announcement')
-            ->getPublishedPaginatedResult($request->query->get('page', 1));
+            ->getPaginatedResult($request->query->get('status', 'published'), $request->query->get('page', 1));
 
         return [
             'announcements' => $announcements,
