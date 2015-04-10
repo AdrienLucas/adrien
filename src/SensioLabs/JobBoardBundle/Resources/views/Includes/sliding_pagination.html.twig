@@ -4,25 +4,9 @@
             <a href="{{ path(route, query|merge({(pageParameterName): first})) }}" class="left-icon"><img class="sprite-icon-green-arrow-left" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" alt="<" /></a>
         {% endif %}
 
-        {#
-        {% if previous is defined %}
-            <span class="previous">
-            <a href="{{ path(route, query|merge({(pageParameterName): previous})) }}">&lt;</a>
-        </span>
-        {% endif %}
-        #}
-
         {% for page in pagesInRange %}
             <a href="{{ path(route, query|merge({(pageParameterName): page})) }}" {{ page == current ? ' class="active"' : ''}}>{{ page }}</a>
         {% endfor %}
-
-        {#
-        {% if next is defined %}
-            <span class="next">
-            <a href="{{ path(route, query|merge({(pageParameterName): next})) }}">&gt;</a>
-        </span>
-        {% endif %}
-        #}
 
         {% if last is defined and current != last %}
             <a href="{{ path(route, query|merge({(pageParameterName): last})) }}" class="right-icon"><img class="sprite-icon-green-arrow-right" src="{{ asset('bundles/sensiolabsjobboard/images/blank.png') }}" alt=">" /></a>

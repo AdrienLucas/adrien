@@ -17,18 +17,10 @@
 {%- endblock form_errors %}
 
 {% block content %}
-    {% if not updating %}
-        {{ breadcrumb({'Post a job': path('job_post')}) }}
-    {% else %}
-        {{ breadcrumb({
-            'My jobs': path('job_post'),
-            (announcement.title) : path('job_update')
-        }) }}
-    {% endif %}
-    <div class="box" style="padding-bottom:15px">
+    {{ breadcrumb({'Post a job': path('job_post')}) }}
 
+    <div class="box postajob-box">
         {% include 'SensioLabsJobBoardBundle:Includes:job_form.html.twig' %}
-
     </div>
 
     <div class="clear"></div>

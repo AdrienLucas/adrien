@@ -8,7 +8,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
 class JobController extends Controller
@@ -20,6 +19,8 @@ class JobController extends Controller
      */
     public function showAction(Announcement $announcement)
     {
+        $this->get('jobboard.viewscount.listener')->setEnabled('Detail');
+
         return [
             'announcement' => $announcement,
         ];
@@ -39,67 +40,19 @@ class JobController extends Controller
 
     /**
      * @Route("/post", name="job_post")
-     * @Route("/_update", name="_job_update", defaults={"update" = true})
      * @Template()
      */
-    public function postAction(Request $request, $update = false)
+    public function postAction(Request $request)
     {
-        if ($update) {
-            $announcement = $this->get('session')->get('announcement_preview');
+        $announcement = new Announcement();
 
-            if (!$announcement instanceof Announcement) {
-                throw $this->createNotFoundException('Announcement not found in session.');
-            }
-        } else {
-            $announcement = new Announcement();
-        }
         $form = $this->createForm('sensiolabs_jobboardbundle_announcement', $announcement, [
             'action' => $this->generateUrl('job_post'),
         ]);
+
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $this->get('session')->set('announcement_preview', $announcement);
-
-            return $this->redirect($this->generateUrl('job_preview', [
-                'country' => $announcement->getCountry(),
-                'contractType' => $announcement->getContractType(),
-                'slug' => $announcement->getSlug(),
-            ]));
-        }
-
-        return [
-            'form' => $form->createView(),
-            'updating' => $update,
-            'announcement' => $announcement,
-        ];
-    }
-
-    /**
-     * @Security("has_role('ROLE_CONNECT_USER')")
-     * @Route("/{country}/{contractType}/{slug}/update", name="job_update")
-     * @ParamConverter("announcement", class="SensioLabsJobBoardBundle:Announcement")
-     * @Template()
-     */
-    public function updateAction(Request $request, Announcement $announcement)
-    {
-        $user = $this->container->get('security.context')->getToken()->getApiUser();
-
-        if ($announcement->getUser() != $user->getUuid()) {
-            throw $this->createNotFoundException('Announcement not found.');
-        }
-
-        $form = $this->createForm('sensiolabs_jobboardbundle_announcement', $announcement, [
-            'action' => $this->generateUrl('job_update', [
-                'country' => $announcement->getCountry(),
-                'contractType' => $announcement->getContractType(),
-                'slug' => $announcement->getSlug(),
-            ]),
-        ]);
-        $form->handleRequest($request);
-
-        if ($form->isValid()) {
-
             $em = $this->getDoctrine()->getManager();
             $em->persist($announcement);
             $em->flush();
@@ -118,20 +71,61 @@ class JobController extends Controller
     }
 
     /**
+     * @Security("has_role('ROLE_CONNECT_USER')")
+     * @Route("/{country}/{contractType}/{slug}/update", name="job_update")
+     * @ParamConverter("announcement", class="SensioLabsJobBoardBundle:Announcement")
+     * @Template()
+     */
+    public function updateAction(Request $request, Announcement $announcement)
+    {
+        $user = $this->container->get('security.token_storage')->getToken()->getApiUser();
+
+        if ($announcement->getUser() != $user->getUuid()) {
+            throw $this->createNotFoundException('Announcement not found.');
+        }
+
+        $form = $this->createForm('sensiolabs_jobboardbundle_announcement', $announcement, [
+            'action' => $this->generateUrl('job_update', [
+                'country' => $announcement->getCountry(),
+                'contractType' => $announcement->getContractType(),
+                'slug' => $announcement->getSlug(),
+            ]),
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($announcement);
+            $em->flush();
+
+            return $this->redirect($this->generateUrl('job_preview', [
+                'country' => $announcement->getCountry(),
+                'contractType' => $announcement->getContractType(),
+                'slug' => $announcement->getSlug(),
+            ]));
+        }
+
+        return [
+            'form' => $form->createView(),
+            'announcement' => $announcement,
+        ];
+    }
+
+    /**
+     * @Security("has_role('ROLE_CONNECT_USER')")
      * @Route("/order", name="job_order")
      * @Template()
      */
     public function orderAction()
     {
+        $user = $this->container->get('security.token_storage')->getToken()->getApiUser();
         $announcement = $this->get('session')->get('announcement_preview');
 
         if (!$announcement instanceof Announcement) {
             throw $this->createNotFoundException('Announcement not found in session.');
         }
 
-        if (is_null($this->user->getUuid())) {
-            throw new \Exception('You have to be authenticated to publish.');
-        }
+        $announcement->setUser($user);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($announcement);
@@ -144,19 +138,10 @@ class JobController extends Controller
      * @Security("has_role('ROLE_CONNECT_USER')")
      * @Route("/{country}/{contractType}/{slug}/pay", name="job_pay")
      * @ParamConverter("announcement", class="SensioLabsJobBoardBundle:Announcement")
-     * @Template()
+     * @Template("SensioLabsJobBoardBundle:Job:order.html.twig")
      */
     public function payAction(Announcement $announcement)
     {
-
-        $this->getConnectedAnnouncementOwner($announcement);
-
-        //$announcement->setUser($user);
-
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($announcement);
-        $em->flush();
-
         return array();
     }
 
@@ -179,7 +164,7 @@ class JobController extends Controller
 
     public function getConnectedAnnouncementOwner(Announcement $announcement)
     {
-        $user = $this->container->get('security.context')->getToken()->getApiUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getApiUser();
         if ($announcement->getUser() != $user->getUuid()) {
             throw $this->createNotFoundException('Announcement not found.');
         }

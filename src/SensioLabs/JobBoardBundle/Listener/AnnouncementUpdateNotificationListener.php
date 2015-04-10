@@ -2,17 +2,21 @@
 
 namespace SensioLabs\JobBoardBundle\Listener;
 
-use Doctrine\Common\Util\Debug;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use SensioLabs\JobBoardBundle\Entity\Announcement;
 use Symfony\Component\Routing\Router;
+use Symfony\Component\Routing\RouterInterface;
 
 class AnnouncementUpdateNotificationListener
 {
-
     protected $router;
     protected $mailer;
+
+    public function __construct(\Swift_Mailer $mailer, RouterInterface $router)
+    {
+        $this->mailer = $mailer;
+        $this->router = $router;
+    }
 
     public function preUpdate(PreUpdateEventArgs $event)
     {
@@ -25,6 +29,7 @@ class AnnouncementUpdateNotificationListener
                 && !$event->hasChangedField('description')
                 && !$event->hasChangedField('contractType')
                 && !$event->hasChangedField('company')
+                && !$event->hasChangedField('howToApply')
             )
         ) {
             return;
@@ -41,15 +46,4 @@ class AnnouncementUpdateNotificationListener
             ));
         $this->mailer->send($message);
     }
-
-    public function setRouter(Router $router)
-    {
-        $this->router = $router;
-    }
-
-    public function setMailer(\Swift_Mailer $mailer)
-    {
-        $this->mailer = $mailer;
-    }
-
 }

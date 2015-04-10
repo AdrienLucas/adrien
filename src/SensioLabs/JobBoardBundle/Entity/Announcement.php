@@ -84,8 +84,8 @@ class Announcement
 
     /**
      * @var string User uuid
-     *
-     * @ORM\Column(name="user", type="text")
+     *             let it nullable to authorise anonymous users
+     * @ORM\Column(name="user", type="text", nullable=true)
      */
     private $user;
 
@@ -106,41 +106,46 @@ class Announcement
     /**
      * @var integer
      *
-     * @ORM\Column(name="timeLeft", type="integer", nullable=true)
+     * @ORM\Column(name="listViewsCount", type="integer")
      */
-    private $timeLeft;
+    private $listViewsCount = 0;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="viewsCount", type="integer", nullable=true)
+     * @ORM\Column(name="detailViewsCount", type="integer")
      */
-    private $viewsCount = 0;
+    private $detailViewsCount = 0;
 
     /**
-     * @var boolean
+     * @var \DateTime
      *
-     * @ORM\Column(name="published", type="boolean", nullable=true)
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $published = false;
+    private $publishedAt;
 
     /**
-     * @return boolean
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    public function isPublished()
-    {
-        return $this->published;
-    }
+    private $endedAt;
 
     /**
-     * @param boolean $published
-     * @return $this
+     * @var \DateTime
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
      */
-    public function setPublished($published)
-    {
-        $this->published = $published;
-        return $this;
-    }
+    private $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime")
+     */
+    private $updatedAt;
 
     public static function getContractTypes($onlyKeys = true)
     {
@@ -174,6 +179,7 @@ class Announcement
     public function setTitle($title)
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -355,10 +361,10 @@ class Announcement
         return $this->howToApply;
     }
 
-
     public function setSlug($slug)
     {
         $this->slug = $slug;
+
         return $this;
     }
 
@@ -403,36 +409,152 @@ class Announcement
     /**
      * @return int
      */
-    public function getTimeLeft()
+    public function getListViewsCount()
     {
-        return $this->timeLeft;
+        return $this->listViewsCount;
     }
 
     /**
-     * @param int $timeLeft
+     * @param int $listViewsCount
+     *
      * @return $this
      */
-    public function setTimeLeft($timeLeft)
+    public function setListViewsCount($listViewsCount)
     {
-        $this->timeLeft = $timeLeft;
+        $this->listViewsCount = $listViewsCount;
+
         return $this;
     }
 
     /**
      * @return int
      */
-    public function getViewsCount()
+    public function getDetailViewsCount()
     {
-        return $this->viewsCount;
+        return $this->detailViewsCount;
     }
 
     /**
-     * @param int $viewsCount
+     * @param int $detailViewsCount
+     *
      * @return $this
      */
-    public function setViewsCount($viewsCount)
+    public function setDetailViewsCount($detailViewsCount)
     {
-        $this->viewsCount = $viewsCount;
+        $this->detailViewsCount = $detailViewsCount;
+
         return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     *
+     * @return $this
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param \DateTime $updatedAt
+     *
+     * @return $this
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getPublishedAt()
+    {
+        return $this->publishedAt;
+    }
+
+    /**
+     * @param \DateTime $publishedAt
+     *
+     * @return $this
+     */
+    public function setPublishedAt($publishedAt)
+    {
+        $this->publishedAt = $publishedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getEndedAt()
+    {
+        return $this->endedAt;
+    }
+
+    /**
+     * @param \DateTime $endedAt
+     *
+     * @return $this
+     */
+    public function setEndedAt($endedAt)
+    {
+        $this->endedAt = $endedAt;
+
+        return $this;
+    }
+
+    //Logical methods
+    public function getViewsCount()
+    {
+        return $this->listViewsCount + $this->detailViewsCount;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function isPublished()
+    {
+        if (is_null($this->publishedAt) || is_null($this->endedAt)) {
+            return false;
+        } else {
+            $now = new \DateTime('now');
+
+            return  ($this->publishedAt <= $now &  $this->endedAt >= $now);
+        }
+    }
+
+    /**
+     * @return int
+     */
+    public function getTimeLeft()
+    {
+        if (is_null($this->endedAt)) {
+            return false;
+        } else {
+            return date_diff($this->endedAt, new \DateTime());
+        }
     }
 }

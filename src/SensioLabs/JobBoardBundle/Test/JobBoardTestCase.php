@@ -5,7 +5,7 @@ namespace SensioLabs\JobBoardBundle\Test;
 use Doctrine\ORM\EntityManager;
 use SensioLabs\Connect\Security\Authentication\Token\ConnectToken;
 use SensioLabs\JobBoardBundle\Entity\Announcement;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Liip\FunctionalTestBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Client;
 use Symfony\Component\BrowserKit\Cookie;
 use SensioLabs\Internal\Connect\Api\Entity\User;
@@ -28,8 +28,9 @@ class JobBoardTestCase extends WebTestCase
     public function setUp()
     {
         $this->client = static::createClient();
-        $this->em = static::$kernel->getContainer()->get('doctrine.orm.entity_manager');
-        parent::setUp();
+        $this->em = static::$kernel->getContainer()
+            ->get('doctrine')
+            ->getManager();
     }
 
     /**
@@ -39,6 +40,9 @@ class JobBoardTestCase extends WebTestCase
     {
         parent::tearDown();
         $this->client = null;
+
+        $this->em->close();
+        $this->em = null;
     }
 
     /**

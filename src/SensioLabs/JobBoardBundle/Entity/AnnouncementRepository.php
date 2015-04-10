@@ -3,6 +3,7 @@
 namespace SensioLabs\JobBoardBundle\Entity;
 
 use Doctrine\ORM\EntityRepository;
+use Knp\Component\Pager\PaginatorInterface;
 
 /**
  * AnnouncementRepository.
@@ -12,6 +13,13 @@ use Doctrine\ORM\EntityRepository;
  */
 class AnnouncementRepository extends EntityRepository
 {
+    protected $pager;
+
+    public function setPager(PaginatorInterface $pager)
+    {
+        $this->pager = $pager;
+    }
+
     public function filterAll($filters, $page, $limit = 10)
     {
         $qb = $this->createQueryBuilder('a');
@@ -29,7 +37,36 @@ class AnnouncementRepository extends EntityRepository
         $qb->setFirstResult($limit*($page-1));
         $qb->setMaxResults($limit);
 
+        $qb->orderBy('a.createdAt', 'desc');
+
         return $qb->getQuery()->getResult();
+    }
+
+    public function findByUserPaginated($userUuid, $page, $limit = 25)
+    {
+        $announcements = $this->findBy(['user' => $userUuid], ['createdAt' => 'desc']);
+
+        return $this->pager->paginate($announcements, $page, $limit);
+    }
+
+    public function getPublishedPaginatedResult($page, $limit = 25)
+    {
+        $qb = $this->createQueryBuilder('a');
+
+        $qb
+            ->where(
+                $qb->expr()->orX(
+                    $qb->expr()->andX(
+                        $qb->expr()->lte('a.publishedAt', ':now'),
+                        $qb->expr()->gte('a.endedAt', ':now')
+                    ),
+                    $qb->expr()->isNull('a.publishedAt')
+                )
+            )
+            ->setParameter('now', new \DateTime('now'))
+        ;
+
+        return $this->pager->paginate($qb, $page, $limit);
     }
 
     public function getCountriesCount()

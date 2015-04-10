@@ -3,6 +3,10 @@
 namespace SensioLabs\JobBoardBundle\Controller;
 
 use Doctrine\ORM\EntityRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use SensioLabs\JobBoardBundle\Entity\Announcement;
+use SensioLabs\JobBoardBundle\Entity\AnnouncementRepository;
 use SensioLabs\JobBoardBundle\Form\AnnouncementFiltersType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -18,7 +22,9 @@ class BaseController extends Controller
      */
     public function indexAction(Request $request)
     {
-        /** @var EntityRepository $repo */
+        $this->get('jobboard.viewscount.listener')->setEnabled('List');
+
+        /** @var AnnouncementRepository $repo */
         $repo = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Announcement');
 
         $filtersForm = $this->createForm(new AnnouncementFiltersType(), null, [
@@ -52,17 +58,15 @@ class BaseController extends Controller
 
     /**
      * @Route("/manage", name="manage")
+     * @Security("has_role('ROLE_CONNECT_USER')")
      * @Template()
      */
-    public function manageAction(Request $request, $announcementPerPages = 25)
+    public function manageAction(Request $request)
     {
-        $user = $this->container->get('security.context')->getToken()->getApiUser();
-
-        /** @var EntityRepository $repo */
-        $repo = $this->getDoctrine()->getRepository('SensioLabsJobBoardBundle:Announcement');
-        $announcements = $repo->findBy(['user' => $user->getUuid()]);
-
-        $announcements = $this->get('knp_paginator')->paginate($announcements, $request->query->get('page', 1), $announcementPerPages);
+        $user = $this->container->get('security.token_storage')->getToken()->getApiUser();
+        /* @var EntityRepository $repo */
+        $announcements = $this->get('sensiolabs_jobboardbundle.repository.announcement')
+            ->findByUserPaginated($user->getUuid(), $request->query->get('page', 1));
 
         return [
             'announcements' => $announcements,

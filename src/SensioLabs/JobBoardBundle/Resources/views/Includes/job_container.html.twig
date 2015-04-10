@@ -5,10 +5,12 @@
         {% endblock %}
 
         {% block job_description %}
-            <div class="padding description">{{ announcement.description }}</div>
+            <div class="padding description">{{ announcement.description|striptags }}</div>
         {% endblock %}
 
         {% block job_apply %}
         {% endblock %}
     {% endembed %}
+{% else %}
+    It seems that no jobs appears for the filters you chose. Please review one of them.
 {% endfor %}

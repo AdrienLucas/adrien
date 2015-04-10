@@ -8,6 +8,9 @@ class BaseControllerTest extends JobBoardTestCase
 {
     public function testIndexAction()
     {
+        $this->loadFixtures(array(
+            'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadAnnouncements',
+        ));
         $crawler = $this->client->request('GET', '/');
         $this->assertSame(10, $crawler->filter('#job-container>div')->count());
 
@@ -24,6 +27,9 @@ class BaseControllerTest extends JobBoardTestCase
 
     public function testIndexActionWithFilters()
     {
+        $this->loadFixtures(array(
+            'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadAnnouncements',
+        ));
         $crawler = $this->client->request('GET', '/?announcement_filters[country]=ES');
         $this->assertSame(7, $crawler->filter('#job-container>div')->count());
 
@@ -36,6 +42,9 @@ class BaseControllerTest extends JobBoardTestCase
 
     public function testManageAction()
     {
+        $this->loadFixtures(array(
+            'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadAnnouncements',
+        ));
         $this->logIn();
         $crawler = $this->client->request('GET', '/manage');
         //Verify entities per page
@@ -55,20 +64,30 @@ class BaseControllerTest extends JobBoardTestCase
         $this->assertSame(null, $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->find(10));
     }
 
-    public function testPostActionSubmitSuccess()
+    public function testViewsCountIncrement()
     {
-        $crawler = $this->client->request('GET', '/post');
-        $form = $crawler->selectButton('Preview')->form();
+        $this->loadFixtures(array(
+            'SensioLabs\JobBoardBundle\DataFixtures\ORM\LoadAnnouncements',
+        ));
+        $announcement = $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->find(1);
+        $origCount = $announcement->getViewsCount();
 
-        $this->client->submit($form, [
-            'sensiolabs_jobboardbundle_announcement[title]' => 'New job available!',
-            'sensiolabs_jobboardbundle_announcement[company]' => 'SensioLabs',
-            'sensiolabs_jobboardbundle_announcement[country]' => 'FR',
-            'sensiolabs_jobboardbundle_announcement[city]' => 'Paris',
-            'sensiolabs_jobboardbundle_announcement[contractType]' => 'FULLTIME',
-            'sensiolabs_jobboardbundle_announcement[description]' => 'Lorem ipsum',
-        ]);
+        $this->client->request('GET', '/');
 
-        $this->assertTrue($this->client->getResponse()->isRedirect('/FR/FULLTIME/new-job-available/preview'));
+        $this->em->refresh($announcement);
+        $this->assertSame($origCount+1, $announcement->getViewsCount());
+
+        $this->client->request('GET', $this->constructAnnouncementUrl($announcement));
+        $announcement = $this->em->getRepository('SensioLabsJobBoardBundle:Announcement')->find(1);
+
+        $this->assertSame($origCount+2, $announcement->getViewsCount());
+    }
+
+    public function testSLNBar()
+    {
+        $this->logIn();
+        $this->client->request('GET', '/manage');
+
+        $this->assertSame(200, $this->client->getResponse()->getStatusCode());
     }
 }
